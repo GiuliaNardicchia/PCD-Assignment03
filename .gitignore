@@ -5,6 +5,7 @@
 .idea
 target
 project/target
+.bloop
 .metals
 
 benchmarks
