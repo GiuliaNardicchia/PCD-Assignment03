@@ -1,5 +1,5 @@
-import org.scalatest.funsuite.AnyFunSuiteLike
+import org.scalatest.funsuite.AnyFunSuite
 
-class DirectoryScannerTest extends AnyFunSuiteLike {
+class DirectoryScannerTest extends AnyFunSuite {
 
 }
