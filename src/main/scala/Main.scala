@@ -7,7 +7,7 @@ object Main:
   import akka.actor.typed.ActorSystem
   import DirectoryScanner.*
 
-  @main def runMain(): Unit =
+  @main def main(): Unit =
     val path = Paths.get(os.root.toString, "Users", "HP", "Desktop", "UNIBO", "stress_test")
     val maxFiles = 10
     val numIntervals = 10

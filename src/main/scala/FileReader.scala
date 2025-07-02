@@ -23,7 +23,7 @@ object FileReader:
             print(s"Starting op: ${filePath.toString}.\n")
             val loc = os.read.lines(os.Path(path), charSet = java.nio.charset.StandardCharsets.ISO_8859_1).size
             print(s"Blocking op finished: ${filePath.toString}, line of code: $loc.\n")
-            (filePath, loc)
+            Seq(filePath, loc)
           context.log.info(s"Done handling ${filePath.toString}")
           Behaviors.same
     }
