@@ -1,3 +1,6 @@
+import akka.actor.typed.ActorRef
+import akka.actor.typed.scaladsl.Behaviors
+
 import java.nio.file.Paths
 
 object Main:
@@ -10,8 +13,14 @@ object Main:
     val numIntervals = 10
     val maxLength = 100
 
-    val system = ActorSystem[Command](
-      guardianBehavior = DirectoryScanner(path.toString),
-      name = "DirectoryScanner"
-    )
+    val system = ActorSystem(Behaviors.setup[DirectoryScanner.Command] { context =>
+      val fileReader = context.spawn(FileReader(path.toString), "FileReader")
+      DirectoryScanner(path.toString, fileReader)
+    }, "ActorSystem")
+
     system ! Scan(os.Path(path.toString))
+
+  @main def checkLOC(): Unit =
+    val path = Paths.get(os.root.toString, "Users", "HP", "Desktop", "UNIBO", "stress_test", "0fa21ded80.java")
+    val loc = os.read.lines(os.Path(path), charSet = java.nio.charset.StandardCharsets.ISO_8859_1).size
+    println(loc)
