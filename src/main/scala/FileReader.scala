@@ -22,15 +22,15 @@ object FileReader:
           val result = Future:
             // ctx.log.info(s"Truly starting ${i}") // NB: THIS WOULD BLOCK (ctx.log is not thread-safe: see docs)
             print(s"Starting op: ${filePath.toString}.\n")
-            val tryLoc = Try {
-              os.read.lines(os.Path(path), charSet = java.nio.charset.StandardCharsets.ISO_8859_1).size
-            }
-            tryLoc match {
-              case Success(loc) => println(s"Numero di righe: $loc")
-              case Failure(e) => println(s"Errore nel leggere il file: ${e.getMessage}")
-            }
-            print(s"Blocking op finished: ${filePath.toString}, line of code: $tryLoc.\n")
-            Seq(filePath, tryLoc)
+            val loc = countLOC(filePath)
+            print(s"Blocking op finished: ${filePath.toString}, line of code: $loc.\n")
+            Seq(filePath, loc)
           context.log.info(s"Done handling ${filePath.toString}")
           Behaviors.same
     }
+
+  private def countLOC(filePath: os.Path): Int =
+    val tryLoc = Try { os.read.lines(filePath, charSet = java.nio.charset.StandardCharsets.ISO_8859_1).size }
+    tryLoc match
+      case Success(v) => { println(s"Numero di righe: $v"); v }
+      case Failure(e) => { println(s"Errore nel leggere il file: ${e.getMessage}"); 0 }
