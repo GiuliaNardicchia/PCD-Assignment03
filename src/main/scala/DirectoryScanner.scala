@@ -12,7 +12,7 @@ object DirectoryScanner:
     case Scan(path: os.Path)
   export Command.*
 
-  def apply(initialPath: String, fileReader: ActorRef[FileReader.Command]): Behavior[Command] =
+  def apply(fileReader: ActorRef[FileReader.Command]): Behavior[Command] =
     Behaviors.receive { (context, msg) =>
       msg match
         case Scan(path) =>
