@@ -2,6 +2,7 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 
 import java.nio.file.Paths
+import GUI.WalkerGUI
 
 object Main:
   import akka.actor.typed.ActorSystem
@@ -18,10 +19,7 @@ object Main:
       val fileReader = context.spawn(FileReader(aggregateActor), "FileReader")
       DirectoryScanner(fileReader)
     }, "ActorSystem")
+    
+    WalkerGUI()
 
     system ! Scan(os.Path(path))
-
-//  @main def checkLOC(): Unit =
-//    val path = Paths.get(os.root.toString, "Users", "HP", "Desktop", "UNIBO", "stress_test", "AccountActivity.java")
-//    val loc = os.read.lines(os.Path(path), charSet = java.nio.charset.StandardCharsets.ISO_8859_1).size
-//    println(loc)

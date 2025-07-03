@@ -5,7 +5,8 @@ import akka.actor.typed.scaladsl.Behaviors
 import FileReader.*
 
 /**
- * Actor directory scanner that recursively scans directories and logs the files found.
+ * Actor DirectoryScanner that recursively scans directories and files that sends as content of messages to FileReader
+ * if it finds a file with .java extension.
  */
 object DirectoryScanner:
   enum Command:

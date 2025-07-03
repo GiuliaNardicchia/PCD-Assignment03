@@ -5,7 +5,8 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 
 /**
- * Actor FileReader that reads a file.
+ * Actor FileReader that read a .java file and count the lines of code.
+ * It sends the result to AggregateActor.
  */
 object FileReader:
   enum Command:
@@ -32,16 +33,6 @@ object FileReader:
 
   private def countLOC(filePath: os.Path): Int =
     val tryLoc = Try { os.read.lines(filePath).size }
-    //val tryLoc = Try { os.read.lines(filePath, charSet = java.nio.charset.StandardCharsets.ISO_8859_1).size }
     tryLoc match
       case Success(v) => println(s"Numero di righe: $v"); v
       case Failure(e) => println(s"Errore nel leggere il file: ${e.getMessage}"); 0
-
-
-//          val result = Future:
-//            // ctx.log.info(s"Truly starting ${i}") // NB: THIS WOULD BLOCK (ctx.log is not thread-safe: see docs)
-//            print(s"Starting op: ${filePath.toString}.\n")
-//            val loc = countLOC(filePath)
-//            print(s"Blocking op finished: ${filePath.toString}, line of code: $loc.\n")
-//            (filePath, loc)
-//          aggregateActor ! AggregateActor.AggregateResult(result)
