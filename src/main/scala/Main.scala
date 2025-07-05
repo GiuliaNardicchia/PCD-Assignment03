@@ -16,8 +16,7 @@ object Main:
 
     val system = ActorSystem(Behaviors.setup[DirectoryScanner.Command] { context =>
       val aggregateActor = context.spawn(AggregateActor(), "AggregateActor")
-      val fileReader = context.spawn(FileReader(aggregateActor), "FileReader")
-      val directoryScanner = context.spawn(DirectoryScanner(fileReader), "DirectoryScanner")
+      val directoryScanner = context.spawn(DirectoryScanner(aggregateActor), "DirectoryScanner")
       WalkerGUI(directoryScanner, aggregateActor, context.system).initGUI()
       Behaviors.empty
     }, "ActorSystem")

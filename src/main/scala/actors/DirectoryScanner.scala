@@ -15,16 +15,21 @@ object DirectoryScanner:
     case Stop
   export Command.*
 
-  def apply(fileReader: ActorRef[FileReader.Command]): Behavior[Command] = idle(fileReader)
+  private var i = 0
 
-  private def idle(fileReader: ActorRef[FileReader.Command]): Behavior[Command] =
+  def apply(aggregateActor: ActorRef[AggregateActor.Command]): Behavior[Command] = idle(aggregateActor)
+
+  private def idle(aggregateActor: ActorRef[AggregateActor.Command]): Behavior[Command] =
     Behaviors.receive { (context, msg) =>
       msg match
-        case Start => active(fileReader)
+        case Start =>
+          val fileReader = context.spawn(FileReader(aggregateActor), s"FileReader$i")
+          i+=1
+          active(aggregateActor, fileReader)
         case _ => Behaviors.same
     }
 
-  private def active(fileReader: ActorRef[FileReader.Command]): Behavior[Command] =
+  private def active(aggregateActor: ActorRef[AggregateActor.Command], fileReader: ActorRef[FileReader.Command]): Behavior[Command] =
     Behaviors.receive { (context, msg) =>
       msg match
         case Scan(path) =>
@@ -41,6 +46,8 @@ object DirectoryScanner:
           }
           Behaviors.same
         case Stop =>
-          idle(fileReader)
+          context.stop(fileReader)
+          idle(aggregateActor)
+
         case _ => Behaviors.same
     }
