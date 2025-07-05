@@ -10,10 +10,21 @@ import akka.actor.typed.scaladsl.Behaviors
  */
 object DirectoryScanner:
   enum Command:
+    case Start
     case Scan(path: os.Path)
+    case Stop
   export Command.*
 
-  def apply(fileReader: ActorRef[FileReader.Command]): Behavior[Command] =
+  def apply(fileReader: ActorRef[FileReader.Command]): Behavior[Command] = idle(fileReader)
+
+  private def idle(fileReader: ActorRef[FileReader.Command]): Behavior[Command] =
+    Behaviors.receive { (context, msg) =>
+      msg match
+        case Start => active(fileReader)
+        case _ => Behaviors.same
+    }
+
+  private def active(fileReader: ActorRef[FileReader.Command]): Behavior[Command] =
     Behaviors.receive { (context, msg) =>
       msg match
         case Scan(path) =>
@@ -29,4 +40,7 @@ object DirectoryScanner:
               context.log.info(s"Unknown type: $p")
           }
           Behaviors.same
+        case Stop =>
+          idle(fileReader)
+        case _ => Behaviors.same
     }

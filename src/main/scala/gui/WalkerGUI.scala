@@ -104,6 +104,8 @@ class WalkerGUI(scannerRef: ActorRef[DirectoryScanner.Command], aggregateRef: Ac
     validated match
       case Some((maxLength, maxFiles, numIntv)) =>
         val dirPath = Paths.get(dir)
+        scannerRef ! DirectoryScanner.Start
+        aggregateRef ! AggregateActor.Start
         scannerRef ! DirectoryScanner.Scan(os.Path(dirPath))
 
         isStopped = false
@@ -123,6 +125,10 @@ class WalkerGUI(scannerRef: ActorRef[DirectoryScanner.Command], aggregateRef: Ac
     isStopped = true
     startButton.setEnabled(true)
     stopButton.setEnabled(false)
+    scannerRef ! DirectoryScanner.Stop
+    aggregateRef ! AggregateActor.ResetStats()
+//    maxFilesArea.setText("")
+//    distributionArea.setText("")
 
   private def printResults(): Unit = {
     import akka.actor.typed.Scheduler
@@ -146,7 +152,7 @@ class WalkerGUI(scannerRef: ActorRef[DirectoryScanner.Command], aggregateRef: Ac
     futureStats.foreach { anyResult =>
       Swing.onEDT {
         val stats = anyResult.asInstanceOf[AggregateActor.Stats]
-        maxFilesArea.setText(stats.topFiles.map { case (p, loc) => s"${p.last} - $loc LOC" }.mkString("\n"))
+        maxFilesArea.setText(stats.topFiles.map(_.toString).mkString("\n"))
         distributionArea.setText(stats.distribution)
       }
     }

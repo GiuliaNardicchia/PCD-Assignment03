@@ -245,7 +245,7 @@
         "platform": {
             "name": "jvm",
             "config": {
-                "home": "C:\\Users\\HP\\.jdks\\openjdk-23",
+                "home": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.6.10-hotspot",
                 "options": [
                     "-Duser.dir=C:\\Users\\HP\\Desktop\\UNIBO\\LaureaMagistrale\\1 Anno\\Programmazione Concorrente e Distribuita (PCD)\\Assignment\\PCD-Assignment03\\project"
                 ]
@@ -254,7 +254,7 @@
                 
             ],
             "runtimeConfig": {
-                "home": "C:\\Users\\HP\\.jdks\\openjdk-23",
+                "home": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.6.10-hotspot",
                 "options": [
                     "-Duser.dir=C:\\Users\\HP\\Desktop\\UNIBO\\LaureaMagistrale\\1 Anno\\Programmazione Concorrente e Distribuita (PCD)\\Assignment\\PCD-Assignment03\\project"
                 ]

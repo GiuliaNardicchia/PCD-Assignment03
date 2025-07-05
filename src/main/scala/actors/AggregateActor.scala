@@ -9,14 +9,25 @@ import akka.actor.typed.{ActorRef, Behavior}
  */
 object AggregateActor:
   enum Command:
+    case Start
     case AggregateResult(path: os.Path, loc: Int)
     case GetStats(maxFiles: Int, numIntervals: Int, maxLength: Int, replyTo: ActorRef[Stats])
+    case ResetStats()
   export Command.*
-  case class Stats(topFiles: Seq[(os.Path, Int)], distribution: String)
+  case class Stats(topFiles: Seq[os.Path], distribution: String)
 
   private var results: Seq[(os.Path, Int)] = Seq.empty
 
-  def apply(): Behavior[Command] =
+  def apply(): Behavior[Command] = idle
+  
+  private def idle: Behavior[Command] =
+    Behaviors.receive { (context, msg) =>
+      msg match
+        case Start => active
+        case _ => Behaviors.same
+    }
+  
+  private def active: Behavior[Command] =
     Behaviors.receive { (context, msg) =>
       msg match
         case AggregateResult(path, loc) =>
@@ -25,7 +36,7 @@ object AggregateActor:
           Behaviors.same
 
         case GetStats(maxFiles, numIntervals, maxLength, replyTo) =>
-          val top = results.sortBy(-_._2).take(maxFiles)
+          val top = results.sortBy(-_._2).take(maxFiles).map((path, _) => path)
           val ranges = calculateIntervalRanges(numIntervals, maxLength / numIntervals, maxLength)
           val dist = Array.fill(ranges.size)(0)
           for ((_, loc) <- results) {
@@ -33,6 +44,14 @@ object AggregateActor:
             if (idx >= 0) dist(idx) += 1
           }
           replyTo ! Stats(top, getDistributionString(ranges, dist, maxLength))
+          Behaviors.same
+
+        case ResetStats() =>
+          results = Seq.empty
+          context.log.info("Statistics reset.")
+          Behaviors.same
+          
+        case _ =>
           Behaviors.same
     }
 
