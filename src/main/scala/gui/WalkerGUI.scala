@@ -104,8 +104,9 @@ class WalkerGUI(scannerRef: ActorRef[DirectoryScanner.Command], aggregateRef: Ac
     validated match
       case Some((maxLength, maxFiles, numIntv)) =>
         val dirPath = Paths.get(dir)
-        scannerRef ! DirectoryScanner.Start
+        aggregateRef ! AggregateActor.ResetStats
         aggregateRef ! AggregateActor.Start
+        scannerRef ! DirectoryScanner.Start
         scannerRef ! DirectoryScanner.Scan(os.Path(dirPath))
 
         isStopped = false
@@ -126,7 +127,7 @@ class WalkerGUI(scannerRef: ActorRef[DirectoryScanner.Command], aggregateRef: Ac
     startButton.setEnabled(true)
     stopButton.setEnabled(false)
     scannerRef ! DirectoryScanner.Stop
-    aggregateRef ! AggregateActor.ResetStats()
+    aggregateRef ! AggregateActor.Stop
 //    maxFilesArea.setText("")
 //    distributionArea.setText("")
 

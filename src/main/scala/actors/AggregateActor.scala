@@ -12,7 +12,8 @@ object AggregateActor:
     case Start
     case AggregateResult(path: os.Path, loc: Int)
     case GetStats(maxFiles: Int, numIntervals: Int, maxLength: Int, replyTo: ActorRef[Stats])
-    case ResetStats()
+    case ResetStats
+    case Stop
   export Command.*
   case class Stats(topFiles: Seq[os.Path], distribution: String)
 
@@ -24,6 +25,10 @@ object AggregateActor:
     Behaviors.receive { (context, msg) =>
       msg match
         case Start => active
+        case ResetStats =>
+          results = Seq.empty
+          context.log.info("Statistics reset.")
+          Behaviors.same
         case _ => Behaviors.same
     }
   
@@ -32,7 +37,6 @@ object AggregateActor:
       msg match
         case AggregateResult(path, loc) =>
           results = results :+ (path, loc)
-          context.log.info(results.size.toString)
           Behaviors.same
 
         case GetStats(maxFiles, numIntervals, maxLength, replyTo) =>
@@ -46,10 +50,13 @@ object AggregateActor:
           replyTo ! Stats(top, getDistributionString(ranges, dist, maxLength))
           Behaviors.same
 
-        case ResetStats() =>
+        case ResetStats =>
           results = Seq.empty
           context.log.info("Statistics reset.")
           Behaviors.same
+
+        case Stop =>
+          Behaviors.stopped
           
         case _ =>
           Behaviors.same

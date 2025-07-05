@@ -46,6 +46,7 @@ object DirectoryScanner:
           }
           Behaviors.same
         case Stop =>
+          fileReader ! FileReader.Stop
           context.stop(fileReader)
           idle(aggregateActor)
 
