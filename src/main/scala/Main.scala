@@ -1,10 +1,12 @@
+import actors.{AggregateActor, DirectoryScanner, FileReader}
 import akka.actor.typed.scaladsl.Behaviors
+import gui.WalkerGUI
 
 import java.nio.file.Paths
 
 object Main:
   import akka.actor.typed.ActorSystem
-  import DirectoryScanner.*
+  import actors.DirectoryScanner.*
 
   @main def runMain(): Unit =
     val path = Paths.get(os.pwd.toString, "benchmarks", "stress_test")
@@ -19,7 +21,3 @@ object Main:
       WalkerGUI(directoryScanner, aggregateActor, context.system).initGUI()
       Behaviors.empty
     }, "ActorSystem")
-
-//    system ! Scan(os.Path(path))
-
-//    C:\Users\HP\Desktop\UNIBO\LaureaMagistrale\1 Anno\Programmazione Concorrente e Distribuita (PCD)\Assignment\PCD-Assignment03\benchmarks

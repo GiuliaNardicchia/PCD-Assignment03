@@ -1,14 +1,13 @@
-import AggregateActor.*
-import DirectoryScanner.*
-import akka.actor.typed.{ActorRef, ActorSystem, Scheduler}
-import akka.actor.typed.scaladsl.AskPattern.*
-import akka.util.Timeout
+package gui
 
-import scala.concurrent.duration.*
+import actors.DirectoryScanner.*
+import actors.{AggregateActor, DirectoryScanner}
+import akka.actor.typed.scaladsl.AskPattern.*
+import akka.actor.typed.{ActorRef, ActorSystem}
+
 import java.awt.*
-import java.nio.file.{Path, Paths}
+import java.nio.file.Paths
 import javax.swing.*
-import scala.concurrent.ExecutionContext
 import scala.swing.Swing
 import scala.util.Try
 
@@ -23,8 +22,6 @@ class WalkerGUI(scannerRef: ActorRef[DirectoryScanner.Command], aggregateRef: Ac
   private val maxFilesArea = new JTextArea()
   private val distributionArea = new JTextArea()
   @volatile private var isStopped = false
-
-//  initGUI()
 
   def initGUI(): Unit =
     val frame = new JFrame("Scala Walker")
@@ -116,7 +113,7 @@ class WalkerGUI(scannerRef: ActorRef[DirectoryScanner.Command], aggregateRef: Ac
         val printerThread = Thread(() =>
           while !isStopped do
             printResults()
-            Thread.sleep(1000)
+            Thread.sleep(75)
         )
         printerThread.start()
 
@@ -128,15 +125,31 @@ class WalkerGUI(scannerRef: ActorRef[DirectoryScanner.Command], aggregateRef: Ac
     stopButton.setEnabled(false)
 
   private def printResults(): Unit = {
-    Swing.onEDT {
-      maxFilesArea.setText("Max files updated")
-      distributionArea.setText("Distribution updated")
+    import akka.actor.typed.Scheduler
+    import akka.util.Timeout
+    import scala.concurrent.ExecutionContext
+    import scala.concurrent.duration.*
+
+    given Timeout = Timeout(3.seconds)
+    given Scheduler = system.scheduler
+    given ExecutionContext = ExecutionContext.global
+
+    val futureStats = aggregateRef.ask(replyTo =>
+      AggregateActor.GetStats(
+        maxFilesField.getText.trim.toInt,
+        numIntervalsField.getText.trim.toInt,
+        maxLengthField.getText.trim.toInt,
+        replyTo
+      )
+    )
+
+    futureStats.foreach { anyResult =>
+      Swing.onEDT {
+        val stats = anyResult.asInstanceOf[AggregateActor.Stats]
+        maxFilesArea.setText(stats.topFiles.map { case (p, loc) => s"${p.last} - $loc LOC" }.mkString("\n"))
+        distributionArea.setText(stats.distribution)
+      }
     }
-//        aggregateRef ! AggregateActor.GetStats(
-//          maxFilesField.getText.trim.toInt,
-//          numIntervalsField.getText.trim.toInt,
-//          maxLengthField.getText.trim.toInt,
-//        )
   }
 
   private def showErrorDialog(message: String): Unit =

@@ -3,8 +3,6 @@ ThisBuild / version := "0.1.0-SNAPSHOT"
 
 ThisBuild / scalaVersion := "3.4.2"
 
-Compile / compileOrder := CompileOrder.Mixed
-
 val junitJupiterVersion = "5.9.2"
 lazy val akkaVersion = "2.8.1"
 lazy val akkaGroup = "com.typesafe.akka"

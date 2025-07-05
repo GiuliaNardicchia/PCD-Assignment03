@@ -1,8 +1,8 @@
-import akka.actor.typed.ActorRef
-import akka.actor.typed.Behavior
-import akka.actor.typed.scaladsl.Behaviors
+package actors
 
-import FileReader.*
+import actors.FileReader.*
+import akka.actor.typed.{ActorRef, Behavior}
+import akka.actor.typed.scaladsl.Behaviors
 
 /**
  * Actor DirectoryScanner that recursively scans directories and files that sends as content of messages to FileReader

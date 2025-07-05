@@ -1,5 +1,7 @@
-import akka.actor.typed.{ActorRef, Behavior, DispatcherSelector}
+package actors
+
 import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.{ActorRef, Behavior, DispatcherSelector}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
