@@ -1,8 +1,6 @@
-import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 
 import java.nio.file.Paths
-import GUI.WalkerGUI
 
 object Main:
   import akka.actor.typed.ActorSystem
@@ -17,9 +15,11 @@ object Main:
     val system = ActorSystem(Behaviors.setup[DirectoryScanner.Command] { context =>
       val aggregateActor = context.spawn(AggregateActor(), "AggregateActor")
       val fileReader = context.spawn(FileReader(aggregateActor), "FileReader")
-      DirectoryScanner(fileReader)
+      val directoryScanner = context.spawn(DirectoryScanner(fileReader), "DirectoryScanner")
+      WalkerGUI(directoryScanner, aggregateActor, context.system).initGUI()
+      Behaviors.empty
     }, "ActorSystem")
-    
-    WalkerGUI()
 
-    system ! Scan(os.Path(path))
+//    system ! Scan(os.Path(path))
+
+//    C:\Users\HP\Desktop\UNIBO\LaureaMagistrale\1 Anno\Programmazione Concorrente e Distribuita (PCD)\Assignment\PCD-Assignment03\benchmarks
