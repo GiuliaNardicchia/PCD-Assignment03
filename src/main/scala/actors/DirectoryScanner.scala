@@ -30,7 +30,7 @@ object DirectoryScanner:
         case _ => Behaviors.same
     }
 
-  private def active(aggregateActor: ActorRef[AggregateActor.Command], fileReader: ActorRef[FileReader.Command]): Behavior[Command] =
+  def active(aggregateActor: ActorRef[AggregateActor.Command], fileReader: ActorRef[FileReader.Command]): Behavior[Command] =
     Behaviors.receive { (context, msg) =>
       msg match
         case Scan(path) =>
@@ -50,6 +50,5 @@ object DirectoryScanner:
           fileReader ! FileReader.Stop
           context.stop(fileReader)
           idle(aggregateActor)
-
         case _ => Behaviors.same
     }
