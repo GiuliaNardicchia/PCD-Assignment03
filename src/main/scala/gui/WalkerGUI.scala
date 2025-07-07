@@ -106,6 +106,11 @@ class WalkerGUI(scannerRef: ActorRef[DirectoryScanner.Command], aggregateRef: Ac
         val dirPath = Paths.get(dir)
         aggregateRef ! AggregateActor.ResetStats
         aggregateRef ! AggregateActor.Start
+
+        if isStopped then
+          scannerRef ! DirectoryScanner.Stop
+          Thread.sleep(100) // Piccolo delay per completare la transizione a idle
+
         scannerRef ! DirectoryScanner.Start
         scannerRef ! DirectoryScanner.Scan(os.Path(dirPath))
 
@@ -127,9 +132,7 @@ class WalkerGUI(scannerRef: ActorRef[DirectoryScanner.Command], aggregateRef: Ac
     startButton.setEnabled(true)
     stopButton.setEnabled(false)
     scannerRef ! DirectoryScanner.Stop
-    aggregateRef ! AggregateActor.Stop
-//    maxFilesArea.setText("")
-//    distributionArea.setText("")
+    aggregateRef ! AggregateActor.ResetStats
 
   private def printResults(): Unit = {
     import akka.actor.typed.Scheduler

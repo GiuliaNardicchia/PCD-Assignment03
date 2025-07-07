@@ -23,8 +23,9 @@ object DirectoryScanner:
     Behaviors.receive { (context, msg) =>
       msg match
         case Start =>
+          context.log.info("Starting new FileReader.")
           val fileReader = context.spawn(FileReader(aggregateActor), s"FileReader$i")
-          i+=1
+          i += 1
           active(aggregateActor, fileReader)
         case _ => Behaviors.same
     }
