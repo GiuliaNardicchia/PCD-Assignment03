@@ -55,9 +55,8 @@ object AggregateActor:
           context.log.info("Statistics reset.")
           Behaviors.same
 
-        case Stop =>
-          Behaviors.stopped
-          
+        case Stop => idle
+        
         case _ =>
           Behaviors.same
     }

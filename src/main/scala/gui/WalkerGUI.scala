@@ -109,9 +109,11 @@ class WalkerGUI(scannerRef: ActorRef[DirectoryScanner.Command], aggregateRef: Ac
 
         if isStopped then
           scannerRef ! DirectoryScanner.Stop
+          aggregateRef ! AggregateActor.Stop
           Thread.sleep(100) // Piccolo delay per completare la transizione a idle
 
         scannerRef ! DirectoryScanner.Start
+        aggregateRef ! AggregateActor.Start
         scannerRef ! DirectoryScanner.Scan(os.Path(dirPath))
 
         isStopped = false
