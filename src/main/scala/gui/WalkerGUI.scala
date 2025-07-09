@@ -11,7 +11,11 @@ import javax.swing.*
 import scala.swing.Swing
 import scala.util.Try
 
-class WalkerGUI(scannerRef: ActorRef[DirectoryScanner.Command], aggregateRef: ActorRef[AggregateActor.Command], system: ActorSystem[?]):
+class WalkerGUI(
+    scannerRef: ActorRef[DirectoryScanner.Command],
+    aggregateRef: ActorRef[AggregateActor.Command],
+    system: ActorSystem[?]
+):
 
   private val directoryField = new JTextField()
   private val maxFilesField = new JTextField("10")
@@ -25,6 +29,15 @@ class WalkerGUI(scannerRef: ActorRef[DirectoryScanner.Command], aggregateRef: Ac
 
   def initGUI(): Unit =
     val frame = new JFrame("Scala Walker")
+    frame.addWindowListener(new java.awt.event.WindowAdapter {
+      override def windowClosing(e: java.awt.event.WindowEvent): Unit = {
+        println("Window is closing. Cleaning up...")
+        scannerRef ! DirectoryScanner.Stop
+        aggregateRef ! AggregateActor.Stop
+        system.terminate() // Shutdown Akka ActorSystem
+        sys.exit(0)
+      }
+    })
     frame.setPreferredSize(new Dimension(800, 600))
 
     val inputPanel = new JPanel(new GridBagLayout())
@@ -95,10 +108,10 @@ class WalkerGUI(scannerRef: ActorRef[DirectoryScanner.Command], aggregateRef: Ac
 
     val validated = for
       maxLength <- parseField(maxLengthField, "max length")
-      maxFiles  <- parseField(maxFilesField, "max files")
-      numIntv   <- parseField(numIntervalsField, "num intervals")
-      _         <- validateLimits(maxFiles, maxLength, "Max Files")
-      _         <- validateLimits(numIntv, maxLength, "Num Intervals")
+      maxFiles <- parseField(maxFilesField, "max files")
+      numIntv <- parseField(numIntervalsField, "num intervals")
+      _ <- validateLimits(maxFiles, maxLength, "Max Files")
+      _ <- validateLimits(numIntv, maxLength, "Num Intervals")
     yield (maxLength, maxFiles, numIntv)
 
     validated match
