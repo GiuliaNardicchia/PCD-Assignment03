@@ -1,27 +1,29 @@
 package it.unibo.pcd.assignment03.view;
 
+import it.unibo.pcd.assignment03.model.Brush;
 import it.unibo.pcd.assignment03.model.BrushManager;
 import it.unibo.pcd.assignment03.model.PixelGrid;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Set;
 
 public class VisualiserPanel extends JPanel {
     private static final int STROKE_SIZE = 1;
-    private final BrushManager brushManager;
+    private final BrushDrawer brushDrawer;
     private final PixelGrid grid;
-    private final int w,h;
+    private final int w, h;
 
-    public VisualiserPanel(PixelGrid grid, BrushManager brushManager, int w, int h){
-        setSize(w,h);
+    public VisualiserPanel(PixelGrid grid, BrushDrawer brushDrawer, int w, int h) {
+        setSize(w, h);
         this.grid = grid;
         this.w = w;
         this.h = h;
-        this.brushManager = brushManager;
+        this.brushDrawer = brushDrawer;
         this.setPreferredSize(new Dimension(w, h));
     }
 
-    public void paint(Graphics g){
+    public void paint(Graphics g, Set<Brush> brushes) {
         Graphics2D g2 = (Graphics2D) g;
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -55,6 +57,6 @@ public class VisualiserPanel extends JPanel {
             }
         }
 
-        brushManager.draw(g2);
+        brushDrawer.draw(g2, brushes);
     }
 }

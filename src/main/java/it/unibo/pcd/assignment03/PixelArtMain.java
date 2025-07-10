@@ -1,24 +1,21 @@
 package it.unibo.pcd.assignment03;
 
+import it.unibo.pcd.assignment03.model.Brush;
+import it.unibo.pcd.assignment03.model.BrushImpl;
 import it.unibo.pcd.assignment03.model.BrushManager;
 import it.unibo.pcd.assignment03.model.PixelGrid;
 import it.unibo.pcd.assignment03.view.PixelGridView;
+import it.unibo.pcd.assignment03.view.ViewImpl;
 
 import java.util.Random;
 
+import static it.unibo.pcd.assignment03.utils.Utils.randomColor;
+
 public class PixelArtMain {
 
-    public static int randomColor() {
-        Random rand = new Random();
-        return rand.nextInt(256 * 256 * 256);
-    }
-
     public static void main(String[] args) {
-        var brushManager = new BrushManager();
-        var localBrush = new BrushManager.Brush(0, 0, randomColor());
-        var fooBrush = new BrushManager.Brush(0, 0, randomColor());
-        brushManager.addBrush(localBrush);
-        brushManager.addBrush(fooBrush);
+        Brush localBrush = new BrushImpl(0, 0, randomColor());
+        View view = new ViewImpl(localBrush);
         PixelGrid grid = new PixelGrid(40, 40);
 
         Random rand = new Random();
