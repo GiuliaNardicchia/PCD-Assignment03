@@ -23,7 +23,7 @@ public class VisualiserPanel extends JPanel {
         this.setPreferredSize(new Dimension(w, h));
     }
 
-    public void paint(Graphics g, Set<Brush> brushes) {
+    public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -57,6 +57,6 @@ public class VisualiserPanel extends JPanel {
             }
         }
 
-        brushDrawer.draw(g2, brushes);
+        brushDrawer.draw(g2);
     }
 }

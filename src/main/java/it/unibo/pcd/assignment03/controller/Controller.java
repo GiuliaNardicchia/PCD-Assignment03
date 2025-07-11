@@ -9,4 +9,12 @@ public interface Controller {
     Model getModel();
 
     View getView();
+
+    void updateLocalBrushPosition(int x, int y);
+
+    void setGridPixel(int x, int y);
+
+    void setLocalBrushColor(int color);
+
+    void start();
 }

@@ -15,11 +15,34 @@ public class ControllerImpl implements Controller {
 
     @Override
     public Model getModel() {
-        return model;
+        return this.model;
     }
 
     @Override
     public View getView() {
-        return view;
+        return this.view;
+    }
+
+    @Override
+    public void updateLocalBrushPosition(int x, int y) {
+        this.model.updateLocalBrushPosition(x, y);
+    }
+
+    @Override
+    public void setGridPixel(int x, int y) {
+        this.model.setGridPixel(x, y);
+
+    }
+
+    @Override
+    public void setLocalBrushColor(int color) {
+        this.model.setLocalBrushColor(color);
+
+    }
+
+    @Override
+    public void start() {
+        this.view.display();
+        this.view.refresh();
     }
 }

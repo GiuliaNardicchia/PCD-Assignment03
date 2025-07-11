@@ -16,11 +16,12 @@ public class Launcher {
     private final static int NUM_COLS = 40;
     public static void main(String[] args) {
         Controller controller = new ControllerImpl();
-        Model model = new ModelImpl();
-        View view = new ViewImpl(NUM_ROWS, NUM_COLS);
+        Model model = new ModelImpl(NUM_ROWS, NUM_COLS);
+        View view = new ViewImpl();
 
+        controller.init(view, model);
         model.init(controller);
         view.init(controller);
-        controller.init(view, model);
+        controller.start();
     }
 }

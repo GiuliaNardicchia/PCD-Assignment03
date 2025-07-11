@@ -8,9 +8,14 @@ import java.util.Set;
 public class BrushDrawerImpl implements BrushDrawer {
     private static final int BRUSH_SIZE = 10;
     private static final int STROKE_SIZE = 2;
+    private final Set<Brush> brushes;
+
+    BrushDrawerImpl(Set<Brush> brushes) {
+        this.brushes = brushes;
+    }
 
     @Override
-    public void draw(Graphics2D g, Set<Brush> brushes) {
+    public void draw(Graphics2D g) {
         brushes.forEach(brush -> {
             g.setColor(new java.awt.Color(brush.getColor()));
             var circle = new java.awt.geom.Ellipse2D.Double(brush.getX() - BRUSH_SIZE / 2.0, brush.getY() - BRUSH_SIZE / 2.0, BRUSH_SIZE, BRUSH_SIZE);

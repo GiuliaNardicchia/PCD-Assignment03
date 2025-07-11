@@ -7,5 +7,7 @@ public interface View {
 
     Controller getController();
 
+    void refresh();
+
     void display();
 }

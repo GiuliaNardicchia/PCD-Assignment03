@@ -9,13 +9,15 @@ import static it.unibo.pcd.assignment03.utils.Utils.randomColor;
 
 public class ModelImpl implements Model {
     private Controller controller;
+    private PixelGrid grid;
     private final Set<Brush> brushes = new HashSet<>();
     private final Brush localBrush;
 
-    public ModelImpl() {
+    public ModelImpl(int numRows, int numCols) {
         Brush localBrush = new BrushImpl(0, 0, randomColor());
         this.brushes.add(localBrush);
         this.localBrush = localBrush;
+        this.grid = new PixelGrid(numRows, numCols);
     }
 
     @Override
@@ -29,6 +31,21 @@ public class ModelImpl implements Model {
     }
 
     @Override
+    public Brush getLocalBrush() {
+        return localBrush;
+    }
+
+    @Override
+    public Set<Brush> getBrushes() {
+        return this.brushes;
+    }
+
+    @Override
+    public PixelGrid getGrid() {
+        return this.grid;
+    }
+
+    @Override
     public void addBrush(final Brush brush) {
         brushes.add(brush);
     }
@@ -36,5 +53,20 @@ public class ModelImpl implements Model {
     @Override
     public void removeBrush(final Brush brush) {
         brushes.remove(brush);
+    }
+
+    @Override
+    public void updateLocalBrushPosition(int x, int y) {
+        this.localBrush.updatePosition(x, y);
+    }
+
+    @Override
+    public void setGridPixel(int x, int y) {
+        this.grid.set(x, y, localBrush.getColor());
+    }
+
+    @Override
+    public void setLocalBrushColor(int color) {
+        this.localBrush.setColor(color);
     }
 }
