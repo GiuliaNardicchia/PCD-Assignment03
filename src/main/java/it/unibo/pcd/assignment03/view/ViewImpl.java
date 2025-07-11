@@ -31,11 +31,11 @@ public class ViewImpl implements View {
         });
 
         pixelGridView.addPixelGridEventListener((x, y) -> {
-            controller.setGridPixel(x, y);
+            controller.updatePixelGrid(x, y);
             pixelGridView.refresh();
         });
 
-        pixelGridView.addColorChangedListener(controller::setLocalBrushColor);
+        pixelGridView.addColorChangedListener(controller::updateLocalBrushColor);
         pixelGridView.display();
     }
 }

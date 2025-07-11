@@ -61,12 +61,12 @@ public class ModelImpl implements Model {
     }
 
     @Override
-    public void setGridPixel(int x, int y) {
+    public void updatePixelGrid(int x, int y) {
         this.grid.set(x, y, localBrush.getColor());
     }
 
     @Override
-    public void setLocalBrushColor(int color) {
+    public void updateLocalBrushColor(int color) {
         this.localBrush.setColor(color);
     }
 }

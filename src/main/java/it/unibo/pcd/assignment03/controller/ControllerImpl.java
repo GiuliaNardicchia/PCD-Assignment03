@@ -29,20 +29,19 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void setGridPixel(int x, int y) {
-        this.model.setGridPixel(x, y);
+    public void updatePixelGrid(int x, int y) {
+        this.model.updatePixelGrid(x, y);
 
     }
 
     @Override
-    public void setLocalBrushColor(int color) {
-        this.model.setLocalBrushColor(color);
+    public void updateLocalBrushColor(int color) {
+        this.model.updateLocalBrushColor(color);
 
     }
 
     @Override
     public void start() {
         this.view.display();
-        this.view.refresh();
     }
 }
