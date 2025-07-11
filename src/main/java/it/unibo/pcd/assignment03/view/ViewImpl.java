@@ -19,11 +19,6 @@ public class ViewImpl implements View {
     }
 
     @Override
-    public void refresh() {
-        this.pixelGridView.refresh();
-    }
-
-    @Override
     public void display() {
         pixelGridView.addMouseMovedListener((x, y) -> {
             controller.updateLocalBrushPosition(x, y);

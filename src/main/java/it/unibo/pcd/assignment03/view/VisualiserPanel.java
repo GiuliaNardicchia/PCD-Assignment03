@@ -1,12 +1,9 @@
 package it.unibo.pcd.assignment03.view;
 
-import it.unibo.pcd.assignment03.model.Brush;
-import it.unibo.pcd.assignment03.model.BrushManager;
 import it.unibo.pcd.assignment03.model.PixelGrid;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Set;
 
 public class VisualiserPanel extends JPanel {
     private static final int STROKE_SIZE = 1;
