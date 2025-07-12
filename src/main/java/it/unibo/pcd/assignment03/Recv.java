@@ -10,7 +10,6 @@ import java.nio.charset.StandardCharsets;
 
 public class Recv {
 
-    private final static String EXCHANGE_NAME = "hello";
 
     public static void main(String[] argv) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
@@ -18,15 +17,20 @@ public class Recv {
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
-        channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
+        channel.exchangeDeclare(Send.EXCHANGE_NAME, "fanout");
         String queueName = channel.queueDeclare().getQueue();
-        channel.queueBind(queueName, EXCHANGE_NAME, "");
+        channel.queueBind(queueName, Send.EXCHANGE_NAME, "");
 
         System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+            System.out.println(consumerTag);
             String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-            System.out.println(" [x] Received '" + message + "'");
+            if (delivery.getEnvelope().getRoutingKey().equals(Send.GRID_EXCANGE_KEY)) {
+                System.out.println(" [x] Received a grid '" + message + "'");
+            } else if (delivery.getEnvelope().getRoutingKey().equals(Send.BRUSH_EXCHANGE_KEY)) {
+                System.out.println(" [x] Received a brush '" + message + "'");
+            }
         };
         channel.basicConsume(queueName, true, deliverCallback, consumerTag -> { });
 
