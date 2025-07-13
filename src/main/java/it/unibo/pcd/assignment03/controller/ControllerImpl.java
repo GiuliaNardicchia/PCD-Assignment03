@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.rabbitmq.client.DeliverCallback;
 import it.unibo.pcd.assignment03.model.Brush;
+import it.unibo.pcd.assignment03.model.BrushImpl;
 import it.unibo.pcd.assignment03.model.Model;
 import it.unibo.pcd.assignment03.view.View;
 
@@ -19,15 +20,20 @@ public class ControllerImpl implements Controller {
     private String brushExchangeQueueName;
 
     private final DeliverCallback manageBrushCallback = (consumerTag, delivery) -> {
-        // TODO
         if (delivery.getEnvelope().getRoutingKey().equals(Channels.BRUSH_POSITION_EXCHANGE.getKey())) {
-            // TODO: Manage position change
-            String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-            GsonBuilder gsonBuilder = new GsonBuilder();
-            Gson gson = gsonBuilder.create();
-            Brush brush = gson.fromJson(message, Brush.class);
-            System.out.println("Received brush pos message: " + message);
-            System.out.println("Received brush pos message: " + brush.toString());
+            // TODO
+            try {
+                // TODO: Manage position change
+                String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                Gson gson = gsonBuilder.create();
+                Brush brush = gson.fromJson(message, BrushImpl.class);
+                System.out.println("Received brush pos message: " + message);
+                System.out.println("Received brush pos message: " + brush.toString());
+            } catch (Exception e) {
+                System.err.println("Error in consumer callback: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
 
     };
