@@ -80,13 +80,7 @@ public class ControllerImpl implements Controller {
     @Override
     public void updateLocalBrushPosition(int x, int y) {
         this.model.updateLocalBrushPosition(x, y);
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-        String message = gson.toJson(this.model.getLocalBrush());
-        try {
-            this.channelManager.sendMessage(Channels.BRUSH_POSITION_EXCHANGE, message);
-        } catch (IOException ignored) {
-        }
+        sendLocalBrushInfo();
     }
 
     @Override
@@ -105,8 +99,19 @@ public class ControllerImpl implements Controller {
     @Override
     public void updateLocalBrushColor(int color) {
         this.model.updateLocalBrushColor(color);
-
+        this.sendLocalBrushInfo();
     }
+
+    private void sendLocalBrushInfo() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        String message = gson.toJson(this.model.getLocalBrush());
+        try {
+            this.channelManager.sendMessage(Channels.BRUSH_POSITION_EXCHANGE, message);
+        } catch (IOException ignored) {
+        }
+    }
+
 
     @Override
     public void start() {
