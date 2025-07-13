@@ -22,15 +22,20 @@ public class ViewImpl implements View {
     public void display() {
         pixelGridView.addMouseMovedListener((x, y) -> {
             controller.updateLocalBrushPosition(x, y);
-            pixelGridView.refresh();
+            this.refresh();
         });
 
         pixelGridView.addPixelGridEventListener((x, y) -> {
             controller.updatePixelGrid(x, y);
-            pixelGridView.refresh();
+            this.refresh();
         });
 
         pixelGridView.addColorChangedListener(controller::updateLocalBrushColor);
         pixelGridView.display();
+    }
+
+    @Override
+    public void refresh() {
+        this.pixelGridView.refresh();
     }
 }

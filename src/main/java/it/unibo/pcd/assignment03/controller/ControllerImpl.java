@@ -22,18 +22,13 @@ public class ControllerImpl implements Controller {
     private final DeliverCallback manageBrushCallback = (consumerTag, delivery) -> {
         if (delivery.getEnvelope().getRoutingKey().equals(Channels.BRUSH_POSITION_EXCHANGE.getKey())) {
             // TODO
-            try {
-                // TODO: Manage position change
-                String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-                GsonBuilder gsonBuilder = new GsonBuilder();
-                Gson gson = gsonBuilder.create();
-                Brush brush = gson.fromJson(message, BrushImpl.class);
-                System.out.println("Received brush pos message: " + message);
-                System.out.println("Received brush pos message: " + brush.toString());
-            } catch (Exception e) {
-                System.err.println("Error in consumer callback: " + e.getMessage());
-                e.printStackTrace();
-            }
+            // TODO: Manage position change
+            String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            Gson gson = gsonBuilder.create();
+            Brush brush = gson.fromJson(message, BrushImpl.class);
+            this.model.updateBrushes(brush);
+            this.view.refresh();
         }
 
     };

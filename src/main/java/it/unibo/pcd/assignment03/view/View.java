@@ -8,4 +8,6 @@ public interface View {
     Controller getController();
 
     void display();
+
+    void refresh();
 }

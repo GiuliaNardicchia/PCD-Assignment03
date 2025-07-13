@@ -3,6 +3,7 @@ package it.unibo.pcd.assignment03.model;
 import it.unibo.pcd.assignment03.controller.Controller;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import static it.unibo.pcd.assignment03.utils.Utils.randomColor;
@@ -68,5 +69,19 @@ public class ModelImpl implements Model {
     @Override
     public void updateLocalBrushColor(int color) {
         this.localBrush.setColor(color);
+    }
+
+    @Override
+    public void updateBrushes(Brush brush) {
+        this.brushes.stream()
+                .filter(b -> Objects.equals(b.getId(), brush.getId()))
+                .findFirst()
+                .ifPresentOrElse(
+                        b -> {
+                            b.updatePosition(brush.getX(), brush.getY());
+                            b.setColor(brush.getColor());
+                            },
+                        () -> this.brushes.add(brush)
+                );
     }
 }
