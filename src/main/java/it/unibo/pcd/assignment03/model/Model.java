@@ -23,6 +23,8 @@ public interface Model {
 
     void setGrid(PixelGrid grid);
 
+    void updateGridFromSource(PixelGrid sourceGrid);
+
     void setBrushes(Set<Brush> brushes);
 
     void updateBrushes(Brush brush);

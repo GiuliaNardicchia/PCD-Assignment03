@@ -69,6 +69,16 @@ public class ModelImpl implements Model {
     }
 
     @Override
+    public void updateGridFromSource(PixelGrid sourceGrid) {
+        // Update the existing grid cell by cell to maintain view references
+        for (int row = 0; row < Math.min(this.grid.getNumRows(), sourceGrid.getNumRows()); row++) {
+            for (int col = 0; col < Math.min(this.grid.getNumColumns(), sourceGrid.getNumColumns()); col++) {
+                this.grid.set(col, row, sourceGrid.get(col, row));
+            }
+        }
+    }
+
+    @Override
     public void setBrushes(Set<Brush> brushes) {
         brushes.add(this.localBrush);
         this.brushManager.setBrushes(brushes);

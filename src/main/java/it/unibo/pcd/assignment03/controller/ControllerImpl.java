@@ -56,14 +56,24 @@ public class ControllerImpl implements Controller {
             }
         } else if (delivery.getEnvelope().getRoutingKey().equals(Channels.WELCOME_BRUSHES_EXCHANGE.getKey())
                 && !receivedBrushes) {
-            BrushManager brushManager = gson.fromJson(msg, BrushManagerImpl.class);
-            this.model.setBrushes(brushManager.getBrushes());
-            this.receivedBrushes = true;
-        } else if (delivery.getEnvelope().getRoutingKey().equals(Channels.WELCOME_GRID_EXCHANGE.getKey())
+            try {
+                BrushManager brushManager = gson.fromJson(msg, BrushManagerImpl.class);
+                this.model.setBrushes(brushManager.getBrushes());
+                this.receivedBrushes = true;
+            } catch (Exception e) {
+                System.err.println("Error deserializing brush manager: " + e.getMessage());
+            }
+        } 
+        else if (delivery.getEnvelope().getRoutingKey().equals(Channels.WELCOME_GRID_EXCHANGE.getKey())
                 && !receivedGrid) {
-            PixelGrid pixelGrid = gson.fromJson(msg, PixelGrid.class);
-            this.model.setGrid(pixelGrid);
-            this.receivedGrid = true;
+            try {
+                PixelGrid pixelGrid = gson.fromJson(msg, PixelGrid.class);
+                this.model.updateGridFromSource(pixelGrid);
+                this.receivedGrid = true;
+                this.view.refresh(); // Refresh the view after updating the grid
+            } catch (Exception e) {
+                System.err.println("Error deserializing pixel grid: " + e.getMessage());
+            }
         }
     };
 
@@ -141,6 +151,6 @@ public class ControllerImpl implements Controller {
     @Override
     public void start() throws IOException {
         this.view.display();
-        this.channelManager.sendMessage(Channels.WELCOME_GRID_EXCHANGE, "hello world!");
+        this.channelManager.sendMessage(Channels.WELCOME_EXCHANGE, "hello world!");
     }
 }
