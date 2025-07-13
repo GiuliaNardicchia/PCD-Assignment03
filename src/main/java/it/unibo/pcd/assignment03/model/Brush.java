@@ -10,4 +10,6 @@ public interface Brush {
     public int getColor();
 
     public void setColor(int color);
+
+    String getId();
 }

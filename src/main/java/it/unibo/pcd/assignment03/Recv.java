@@ -21,6 +21,8 @@ public class Recv {
         String queueName = channel.queueDeclare().getQueue();
         channel.queueBind(queueName, Send.EXCHANGE_NAME, "");
 
+        channel.queueDeclare(Send.QUEUE_NAME, false, false, false, null);
+
         System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
@@ -28,11 +30,18 @@ public class Recv {
             String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
             if (delivery.getEnvelope().getRoutingKey().equals(Send.GRID_EXCANGE_KEY)) {
                 System.out.println(" [x] Received a grid '" + message + "'");
+                channel.basicPublish(Send.EXCHANGE_NAME, Send.BRUSH_EXCHANGE_KEY, null, message.getBytes(StandardCharsets.UTF_8));
             } else if (delivery.getEnvelope().getRoutingKey().equals(Send.BRUSH_EXCHANGE_KEY)) {
                 System.out.println(" [x] Received a brush '" + message + "'");
             }
         };
         channel.basicConsume(queueName, true, deliverCallback, consumerTag -> { });
+
+        DeliverCallback queueCallback = (consumerTag, delivery) -> {
+            String message = new String(delivery.getBody(), "UTF-8");
+            System.out.println(" [x] Received '" + message + "'");
+        };
+        channel.basicConsume(Send.QUEUE_NAME, true, queueCallback, consumerTag -> { });
 
 
     }

@@ -9,12 +9,12 @@ import it.unibo.pcd.assignment03.model.ModelImpl;
 import it.unibo.pcd.assignment03.view.View;
 import it.unibo.pcd.assignment03.view.ViewImpl;
 
-import static it.unibo.pcd.assignment03.utils.Utils.randomColor;
+import java.io.IOException;
 
 public class Launcher {
     private final static int NUM_ROWS = 40;
     private final static int NUM_COLS = 40;
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Controller controller = new ControllerImpl();
         Model model = new ModelImpl(NUM_ROWS, NUM_COLS);
         View view = new ViewImpl();

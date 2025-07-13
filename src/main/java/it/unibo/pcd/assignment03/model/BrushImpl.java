@@ -1,17 +1,23 @@
 package it.unibo.pcd.assignment03.model;
 
+import java.io.Serial;
 import java.util.Objects;
+import java.util.Random;
 
 public class BrushImpl implements Brush {
     private int x;
     private int y;
     private int color;
+    private final int id;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
 
     public BrushImpl(int x, int y, int color) {
         this.x = x;
         this.y = y;
         this.color = color;
+        this.id = new Random().nextInt();
     }
 
     @Override
@@ -41,6 +47,11 @@ public class BrushImpl implements Brush {
     }
 
     @Override
+    public String getId() {
+        return String.valueOf(this.id);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         BrushImpl brush = (BrushImpl) o;
@@ -50,5 +61,15 @@ public class BrushImpl implements Brush {
     @Override
     public int hashCode() {
         return Objects.hash(x, y, color);
+    }
+
+    @Override
+    public String toString() {
+        return "BrushImpl{" +
+                "x=" + x +
+                ", y=" + y +
+                ", color=" + color +
+                ", id=" + id +
+                '}';
     }
 }
