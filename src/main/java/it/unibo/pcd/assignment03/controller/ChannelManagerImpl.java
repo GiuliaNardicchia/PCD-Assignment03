@@ -21,10 +21,10 @@ public class ChannelManagerImpl implements ChannelManager {
     }
 
     @Override
-    public String exchangeDeclare(String exchangeName, String type) throws IOException {
-        channel.exchangeDeclare(Channels.BRUSH_POSITION_EXCHANGE.getName(), "fanout");
+    public String exchangeDeclare(Channels exchange, String type) throws IOException {
+        channel.exchangeDeclare(exchange.getName(), type);
         String queueName = channel.queueDeclare().getQueue();
-        channel.queueBind(queueName, Channels.BRUSH_POSITION_EXCHANGE.getName(), Channels.BRUSH_POSITION_EXCHANGE.getKey());
+        channel.queueBind(queueName, exchange.getName(), exchange.getKey());
         return queueName;
     }
 

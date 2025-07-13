@@ -2,7 +2,8 @@ package it.unibo.pcd.assignment03.controller;
 
 public enum Channels {
     BRUSH_POSITION_EXCHANGE("brush", "position"),
-    BRUSH_COLOR_EXCHANGE("brush", "color"),
+    //    BRUSH_COLOR_EXCHANGE("brush", "color"),
+    GRID_CELL_EXCHANGE("grid", "cell"),
     ;
     private final String name;
     private final String key;

@@ -9,8 +9,6 @@ public class BrushImpl implements Brush {
     private int y;
     private int color;
     private final int id;
-    @Serial
-    private static final long serialVersionUID = 1L;
 
 
     public BrushImpl(int x, int y, int color) {

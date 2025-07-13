@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public interface ChannelManager {
 
-    String exchangeDeclare(String exchangeName, String type) throws IOException;
+    String exchangeDeclare(Channels exchange, String type) throws IOException;
 
     void sendMessage(Channels exchange, String message) throws IOException;
 

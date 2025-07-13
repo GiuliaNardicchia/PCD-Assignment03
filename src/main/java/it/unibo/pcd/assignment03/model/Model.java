@@ -21,7 +21,7 @@ public interface Model {
 
     void updateLocalBrushPosition(int x, int y);
 
-    void updatePixelGrid(int x, int y);
+    void updatePixelGrid(int x, int y,  int color);
 
     void updateLocalBrushColor(int color);
 

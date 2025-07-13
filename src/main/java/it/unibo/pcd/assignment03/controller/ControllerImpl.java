@@ -18,14 +18,15 @@ public class ControllerImpl implements Controller {
     private ChannelManager channelManager;
 
     private String brushExchangeQueueName;
+    private String cellExchangeQueueName;
 
     private final DeliverCallback manageBrushCallback = (consumerTag, delivery) -> {
         if (delivery.getEnvelope().getRoutingKey().equals(Channels.BRUSH_POSITION_EXCHANGE.getKey())) {
             // TODO
             // TODO: Manage position change
+            final GsonBuilder gsonBuilder = new GsonBuilder();
+            final Gson gson = gsonBuilder.create();
             String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-            GsonBuilder gsonBuilder = new GsonBuilder();
-            Gson gson = gsonBuilder.create();
             Brush brush = gson.fromJson(message, BrushImpl.class);
             this.model.updateBrushes(brush);
             this.view.refresh();
@@ -33,10 +34,24 @@ public class ControllerImpl implements Controller {
 
     };
 
+    private final DeliverCallback manageGridCallback = (consumerTag, delivery) -> {
+        try {
+            final GsonBuilder gsonBuilder = new GsonBuilder();
+            final Gson gson = gsonBuilder.create();
+            String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+            System.out.println("Received grid message: " + message);
+            GridCellUpdateMessage gridCell = gson.fromJson(message, GridCellUpdateMessage.class);
+            this.model.updatePixelGrid(gridCell.x, gridCell.y, gridCell.color);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    };
+
     public ControllerImpl() {
         try {
             this.channelManager = new ChannelManagerImpl();
-            this.brushExchangeQueueName = channelManager.exchangeDeclare(Channels.BRUSH_POSITION_EXCHANGE.getName(), "fanout");
+            this.brushExchangeQueueName = channelManager.exchangeDeclare(Channels.BRUSH_POSITION_EXCHANGE, "fanout");
+            this.cellExchangeQueueName = channelManager.exchangeDeclare(Channels.GRID_CELL_EXCHANGE, "fanout");
         } catch (TimeoutException | IOException e) {
             System.err.println(e.getMessage());
             System.exit(1);
@@ -48,6 +63,7 @@ public class ControllerImpl implements Controller {
         this.view = view;
         this.model = model;
         this.channelManager.registerConsumer(this.brushExchangeQueueName, manageBrushCallback);
+        this.channelManager.registerConsumer(this.cellExchangeQueueName, manageGridCallback);
     }
 
 
@@ -75,8 +91,15 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void updatePixelGrid(int x, int y) {
-        this.model.updatePixelGrid(x, y);
-
+        this.model.updatePixelGrid(x, y, this.model.getLocalBrush().getColor());
+        GridCellUpdateMessage gridCell = new GridCellUpdateMessage(x, y, this.model.getLocalBrush().getColor());
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        String message = gson.toJson(gridCell);
+        try {
+            this.channelManager.sendMessage(Channels.GRID_CELL_EXCHANGE, message);
+        } catch (IOException ignored) {
+        }
     }
 
     @Override
