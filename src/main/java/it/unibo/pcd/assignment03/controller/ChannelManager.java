@@ -9,6 +9,8 @@ public interface ChannelManager {
 
     String exchangeDeclare(Channels exchange, String type) throws IOException;
 
+    void queueBind(String queueName, Channels exchange) throws IOException;
+
     void sendMessage(Channels exchange, String message) throws IOException;
 
     void registerConsumer(String queueName, DeliverCallback deliverCallback) throws IOException;

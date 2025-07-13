@@ -23,9 +23,12 @@ public class ChannelManagerImpl implements ChannelManager {
     @Override
     public String exchangeDeclare(Channels exchange, String type) throws IOException {
         channel.exchangeDeclare(exchange.getName(), type);
-        String queueName = channel.queueDeclare().getQueue();
+        return channel.queueDeclare().getQueue();
+    }
+
+    @Override
+    public void queueBind(String queueName, Channels exchange) throws IOException {
         channel.queueBind(queueName, exchange.getName(), exchange.getKey());
-        return queueName;
     }
 
     @Override

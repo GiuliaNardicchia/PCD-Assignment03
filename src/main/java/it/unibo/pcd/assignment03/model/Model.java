@@ -11,19 +11,19 @@ public interface Model {
 
     Brush getLocalBrush();
 
-    Set<Brush> getBrushes();
+    BrushManager getBrushManager();
 
     PixelGrid getGrid();
-
-    void addBrush(Brush brush);
-
-    void removeBrush(Brush brush);
 
     void updateLocalBrushPosition(int x, int y);
 
     void updatePixelGrid(int x, int y,  int color);
 
     void updateLocalBrushColor(int color);
+
+    void setGrid(PixelGrid grid);
+
+    void setBrushes(Set<Brush> brushes);
 
     void updateBrushes(Brush brush);
 }

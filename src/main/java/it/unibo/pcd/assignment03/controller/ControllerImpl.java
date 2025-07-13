@@ -3,9 +3,7 @@ package it.unibo.pcd.assignment03.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.rabbitmq.client.DeliverCallback;
-import it.unibo.pcd.assignment03.model.Brush;
-import it.unibo.pcd.assignment03.model.BrushImpl;
-import it.unibo.pcd.assignment03.model.Model;
+import it.unibo.pcd.assignment03.model.*;
 import it.unibo.pcd.assignment03.view.View;
 
 import java.io.IOException;
@@ -19,31 +17,53 @@ public class ControllerImpl implements Controller {
 
     private String brushExchangeQueueName;
     private String cellExchangeQueueName;
+    private String welcomeExchangeQueueName;
+
+    private boolean receivedGrid = false;
+    private boolean receivedBrushes = false;
 
     private final DeliverCallback manageBrushCallback = (consumerTag, delivery) -> {
-        if (delivery.getEnvelope().getRoutingKey().equals(Channels.BRUSH_POSITION_EXCHANGE.getKey())) {
-            // TODO
-            // TODO: Manage position change
-            final GsonBuilder gsonBuilder = new GsonBuilder();
-            final Gson gson = gsonBuilder.create();
-            String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-            Brush brush = gson.fromJson(message, BrushImpl.class);
-            this.model.updateBrushes(brush);
-            this.view.refresh();
-        }
-
+        final GsonBuilder gsonBuilder = new GsonBuilder();
+        final Gson gson = gsonBuilder.create();
+        String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+        Brush brush = gson.fromJson(message, BrushImpl.class);
+        this.model.updateBrushes(brush);
+        this.view.refresh();
     };
 
     private final DeliverCallback manageGridCallback = (consumerTag, delivery) -> {
-        try {
-            final GsonBuilder gsonBuilder = new GsonBuilder();
-            final Gson gson = gsonBuilder.create();
-            String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-            System.out.println("Received grid message: " + message);
-            GridCellUpdateMessage gridCell = gson.fromJson(message, GridCellUpdateMessage.class);
-            this.model.updatePixelGrid(gridCell.x, gridCell.y, gridCell.color);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        final GsonBuilder gsonBuilder = new GsonBuilder();
+        final Gson gson = gsonBuilder.create();
+        String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+        System.out.println("Received grid message: " + message);
+        GridCellUpdateMessage gridCell = gson.fromJson(message, GridCellUpdateMessage.class);
+        this.model.updatePixelGrid(gridCell.x, gridCell.y, gridCell.color);
+    };
+
+    private final DeliverCallback manageWelcomeCallback = (consumerTag, delivery) -> {
+        final GsonBuilder gsonBuilder = new GsonBuilder();
+        final Gson gson = gsonBuilder.create();
+        String msg = new String(delivery.getBody(), StandardCharsets.UTF_8);
+        System.out.println("Received welcome message: " + msg);
+        if (delivery.getEnvelope().getRoutingKey().equals(Channels.WELCOME_EXCHANGE.getKey())) {
+            try {
+                BrushManager manager = this.model.getBrushManager();
+                String brushes = gson.toJson(manager);
+                this.channelManager.sendMessage(Channels.WELCOME_BRUSHES_EXCHANGE, brushes);
+                String grid = gson.toJson(this.model.getGrid());
+                this.channelManager.sendMessage(Channels.WELCOME_GRID_EXCHANGE, grid);
+            } catch (IOException ignored) {
+            }
+        } else if (delivery.getEnvelope().getRoutingKey().equals(Channels.WELCOME_BRUSHES_EXCHANGE.getKey())
+                && !receivedBrushes) {
+            BrushManager brushManager = gson.fromJson(msg, BrushManagerImpl.class);
+            this.model.setBrushes(brushManager.getBrushes());
+            this.receivedBrushes = true;
+        } else if (delivery.getEnvelope().getRoutingKey().equals(Channels.WELCOME_GRID_EXCHANGE.getKey())
+                && !receivedGrid) {
+            PixelGrid pixelGrid = gson.fromJson(msg, PixelGrid.class);
+            this.model.setGrid(pixelGrid);
+            this.receivedGrid = true;
         }
     };
 
@@ -51,7 +71,13 @@ public class ControllerImpl implements Controller {
         try {
             this.channelManager = new ChannelManagerImpl();
             this.brushExchangeQueueName = channelManager.exchangeDeclare(Channels.BRUSH_POSITION_EXCHANGE, "fanout");
+            this.channelManager.queueBind(this.brushExchangeQueueName, Channels.BRUSH_POSITION_EXCHANGE);
             this.cellExchangeQueueName = channelManager.exchangeDeclare(Channels.GRID_CELL_EXCHANGE, "fanout");
+            this.channelManager.queueBind(this.cellExchangeQueueName, Channels.GRID_CELL_EXCHANGE);
+            this.welcomeExchangeQueueName = channelManager.exchangeDeclare(Channels.WELCOME_EXCHANGE, "fanout");
+            this.channelManager.queueBind(this.welcomeExchangeQueueName, Channels.WELCOME_EXCHANGE);
+            this.channelManager.queueBind(this.welcomeExchangeQueueName, Channels.WELCOME_BRUSHES_EXCHANGE);
+            this.channelManager.queueBind(this.welcomeExchangeQueueName, Channels.WELCOME_GRID_EXCHANGE);
         } catch (TimeoutException | IOException e) {
             System.err.println(e.getMessage());
             System.exit(1);
@@ -64,8 +90,8 @@ public class ControllerImpl implements Controller {
         this.model = model;
         this.channelManager.registerConsumer(this.brushExchangeQueueName, manageBrushCallback);
         this.channelManager.registerConsumer(this.cellExchangeQueueName, manageGridCallback);
+        this.channelManager.registerConsumer(this.welcomeExchangeQueueName, manageWelcomeCallback);
     }
-
 
     @Override
     public Model getModel() {
@@ -112,9 +138,9 @@ public class ControllerImpl implements Controller {
         }
     }
 
-
     @Override
-    public void start() {
+    public void start() throws IOException {
         this.view.display();
+        this.channelManager.sendMessage(Channels.WELCOME_GRID_EXCHANGE, "hello world!");
     }
 }
