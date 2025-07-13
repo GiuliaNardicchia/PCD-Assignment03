@@ -2,12 +2,15 @@ package it.unibo.pcd.assignment03.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.rabbitmq.client.DeliverCallback;
 import it.unibo.pcd.assignment03.model.*;
 import it.unibo.pcd.assignment03.view.View;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
 public class ControllerImpl implements Controller {
@@ -47,9 +50,12 @@ public class ControllerImpl implements Controller {
         System.out.println("Received welcome message: " + msg);
         if (delivery.getEnvelope().getRoutingKey().equals(Channels.WELCOME_EXCHANGE.getKey())) {
             try {
-                BrushManager manager = this.model.getBrushManager();
-                String brushes = gson.toJson(manager);
-                this.channelManager.sendMessage(Channels.WELCOME_BRUSHES_EXCHANGE, brushes);
+                Brush brush = gson.fromJson(msg, BrushImpl.class);
+                this.model.updateBrushes(brush);
+                this.view.refresh();
+                Set<Brush> brushes = this.model.getBrushManager().getBrushes();
+                String brushesJson = gson.toJson(brushes);
+                this.channelManager.sendMessage(Channels.WELCOME_BRUSHES_EXCHANGE, brushesJson);
                 String grid = gson.toJson(this.model.getGrid());
                 this.channelManager.sendMessage(Channels.WELCOME_GRID_EXCHANGE, grid);
             } catch (IOException ignored) {
@@ -57,14 +63,15 @@ public class ControllerImpl implements Controller {
         } else if (delivery.getEnvelope().getRoutingKey().equals(Channels.WELCOME_BRUSHES_EXCHANGE.getKey())
                 && !receivedBrushes) {
             try {
-                BrushManager brushManager = gson.fromJson(msg, BrushManagerImpl.class);
-                this.model.setBrushes(brushManager.getBrushes());
+                TypeToken<Set<BrushImpl>> brushSetType = new TypeToken<>() {};
+                Set<BrushImpl> brushes = gson.fromJson(msg, brushSetType.getType());
+                Set<Brush> brushSet = new HashSet<>(brushes);
+                this.model.setBrushes(brushSet);
                 this.receivedBrushes = true;
             } catch (Exception e) {
-                System.err.println("Error deserializing brush manager: " + e.getMessage());
+                System.err.println("Error deserializing brush set: " + e.getMessage());
             }
-        } 
-        else if (delivery.getEnvelope().getRoutingKey().equals(Channels.WELCOME_GRID_EXCHANGE.getKey())
+        } else if (delivery.getEnvelope().getRoutingKey().equals(Channels.WELCOME_GRID_EXCHANGE.getKey())
                 && !receivedGrid) {
             try {
                 PixelGrid pixelGrid = gson.fromJson(msg, PixelGrid.class);
@@ -151,6 +158,9 @@ public class ControllerImpl implements Controller {
     @Override
     public void start() throws IOException {
         this.view.display();
-        this.channelManager.sendMessage(Channels.WELCOME_EXCHANGE, "hello world!");
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        String message = gson.toJson(this.model.getLocalBrush());
+        this.channelManager.sendMessage(Channels.WELCOME_EXCHANGE, message);
     }
 }

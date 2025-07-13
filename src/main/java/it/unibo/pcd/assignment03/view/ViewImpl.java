@@ -10,7 +10,7 @@ public class ViewImpl implements View {
     @Override
     public void init(Controller controller) {
         this.controller = controller;
-        this.pixelGridView = new PixelGridView(this.controller.getModel().getGrid(), new BrushDrawerImpl(this.controller.getModel().getBrushManager().getBrushes()), 600, 600);
+        this.pixelGridView = new PixelGridView(this.controller.getModel().getGrid(), new BrushDrawerImpl(this.controller.getModel().getBrushManager()), 600, 600);
     }
 
     @Override
