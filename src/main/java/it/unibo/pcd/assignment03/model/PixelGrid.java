@@ -5,7 +5,8 @@ import java.util.Arrays;
 public class PixelGrid {
 	private final int nRows;
 	private final int nColumns;
-	private final int[][] grid;
+
+	private int[][] grid;
 	
 	public PixelGrid(final int nRows, final int nColumns) {
 		this.nRows = nRows;
@@ -30,10 +31,18 @@ public class PixelGrid {
 	public int getNumRows() {
 		return this.nRows;
 	}
-	
+
+	public void setGrid(int[][] grid) {
+		this.grid = grid;
+	}
+
+	public int[][] getGrid() {
+		return grid;
+	}
 
 	public int getNumColumns() {
 		return this.nColumns;
 	}
-	
+
+
 }
