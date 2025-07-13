@@ -3,9 +3,10 @@ package it.unibo.pcd.assignment03.controller;
 public enum Channels {
     BRUSH_POSITION_EXCHANGE("brush", "info"),
     GRID_CELL_EXCHANGE("grid", "cell"),
-    WELCOME_EXCHANGE("aniasrntneotiaanotei", "info"),
-    WELCOME_GRID_EXCHANGE("aniasrntneotiaanotei", "grid"),
-    WELCOME_BRUSHES_EXCHANGE("aniasrntneotiaanotei", "brushes"),
+    WELCOME_EXCHANGE("welcome_sharing", "info"),
+    WELCOME_GRID_EXCHANGE("welcome_sharing", "grid"),
+    WELCOME_BRUSHES_EXCHANGE("welcome_sharing", "brushes"),
+    GOODBYE_EXCHANGE("goodbye_sharing", "info"),
     ;
     private final String name;
     private final String key;

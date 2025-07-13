@@ -19,4 +19,6 @@ public interface Controller {
     void updateLocalBrushColor(int color);
 
     void start() throws IOException;
+
+    void sendGoodbyeMessage() throws IOException;
 }

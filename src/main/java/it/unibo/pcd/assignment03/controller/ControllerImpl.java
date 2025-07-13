@@ -21,6 +21,7 @@ public class ControllerImpl implements Controller {
     private String brushExchangeQueueName;
     private String cellExchangeQueueName;
     private String welcomeExchangeQueueName;
+    private String goodbyeExchangeQueueName;
 
     private boolean receivedGrid = false;
     private boolean receivedBrushes = false;
@@ -84,6 +85,16 @@ public class ControllerImpl implements Controller {
         }
     };
 
+    private final DeliverCallback manageGoodbyeCallback = (consumerTag, delivery) -> {
+        final GsonBuilder gsonBuilder = new GsonBuilder();
+        final Gson gson = gsonBuilder.create();
+        String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+        System.out.println("Received goodbye message: " + message);
+        Brush brush = gson.fromJson(message, BrushImpl.class);
+        this.model.getBrushManager().removeBrush(brush);
+        this.view.refresh();
+    };
+
     public ControllerImpl() {
         try {
             this.channelManager = new ChannelManagerImpl();
@@ -95,6 +106,8 @@ public class ControllerImpl implements Controller {
             this.channelManager.queueBind(this.welcomeExchangeQueueName, Channels.WELCOME_EXCHANGE);
             this.channelManager.queueBind(this.welcomeExchangeQueueName, Channels.WELCOME_BRUSHES_EXCHANGE);
             this.channelManager.queueBind(this.welcomeExchangeQueueName, Channels.WELCOME_GRID_EXCHANGE);
+            this.goodbyeExchangeQueueName = channelManager.exchangeDeclare(Channels.GOODBYE_EXCHANGE, "fanout");
+            this.channelManager.queueBind(this.goodbyeExchangeQueueName, Channels.GOODBYE_EXCHANGE);
         } catch (TimeoutException | IOException e) {
             System.err.println(e.getMessage());
             System.exit(1);
@@ -108,6 +121,7 @@ public class ControllerImpl implements Controller {
         this.channelManager.registerConsumer(this.brushExchangeQueueName, manageBrushCallback);
         this.channelManager.registerConsumer(this.cellExchangeQueueName, manageGridCallback);
         this.channelManager.registerConsumer(this.welcomeExchangeQueueName, manageWelcomeCallback);
+        this.channelManager.registerConsumer(this.goodbyeExchangeQueueName, manageGoodbyeCallback);
     }
 
     @Override
@@ -162,5 +176,13 @@ public class ControllerImpl implements Controller {
         Gson gson = gsonBuilder.create();
         String message = gson.toJson(this.model.getLocalBrush());
         this.channelManager.sendMessage(Channels.WELCOME_EXCHANGE, message);
+    }
+
+    @Override
+    public void sendGoodbyeMessage() throws IOException {
+        GsonBuilder  gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        String message = gson.toJson(this.model.getLocalBrush());
+        this.channelManager.sendMessage(Channels.GOODBYE_EXCHANGE, message);
     }
 }

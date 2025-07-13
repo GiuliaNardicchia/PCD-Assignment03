@@ -5,6 +5,7 @@ import it.unibo.pcd.assignment03.model.PixelGrid;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
@@ -18,7 +19,7 @@ public class PixelGridView extends JFrame {
 
     private final List<ColorChangeListener> colorChangeListeners;
 
-    public PixelGridView(PixelGrid grid, BrushDrawer brushDrawer, int w, int h) {
+    public PixelGridView(PixelGrid grid, BrushDrawer brushDrawer, int w, int h, View view) {
         this.grid = grid;
         this.w = w;
         this.h = h;
@@ -43,6 +44,20 @@ public class PixelGridView extends JFrame {
         add(colorChangeButton, BorderLayout.SOUTH);
         getContentPane().add(panel);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        // Add a window listener to handle the closing event
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.out.println("shutting down");
+                try {
+                    view.getController().sendGoodbyeMessage();
+                } catch (IOException ignored) {
+                }
+                // Then actually exit
+                dispose(); // release resources
+                System.exit(0); // close application
+            }
+        });
         hideCursor();
     }
 

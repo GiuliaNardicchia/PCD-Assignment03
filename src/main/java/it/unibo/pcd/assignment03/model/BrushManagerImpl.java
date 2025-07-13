@@ -1,6 +1,7 @@
 package it.unibo.pcd.assignment03.model;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class BrushManagerImpl implements BrushManager {
@@ -13,7 +14,7 @@ public class BrushManagerImpl implements BrushManager {
 
     @Override
     public void removeBrush(Brush brush) {
-        this.brushes.remove(brush);
+        this.brushes.removeIf(other -> Objects.equals(other.getId(), brush.getId()));
     }
 
     @Override
