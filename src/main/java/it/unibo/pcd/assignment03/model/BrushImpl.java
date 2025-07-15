@@ -10,7 +10,6 @@ public class BrushImpl implements Brush {
     private int color;
     private final int id;
 
-
     public BrushImpl(int x, int y, int color) {
         this.x = x;
         this.y = y;

@@ -78,7 +78,7 @@ public class ControllerImpl implements Controller {
                 PixelGrid pixelGrid = gson.fromJson(msg, PixelGrid.class);
                 this.model.updateGridFromSource(pixelGrid);
                 this.receivedGrid = true;
-                this.view.refresh(); // Refresh the view after updating the grid
+                this.view.refresh();
             } catch (Exception e) {
                 System.err.println("Error deserializing pixel grid: " + e.getMessage());
             }

@@ -20,7 +20,6 @@ public class BrushDrawerImpl implements BrushDrawer {
         this.brushManager.getBrushes().forEach(brush -> {
             g.setColor(new java.awt.Color(brush.getColor()));
             var circle = new java.awt.geom.Ellipse2D.Double(brush.getX() - BRUSH_SIZE / 2.0, brush.getY() - BRUSH_SIZE / 2.0, BRUSH_SIZE, BRUSH_SIZE);
-            // draw the polygon
             g.fill(circle);
             g.setStroke(new BasicStroke(STROKE_SIZE));
             g.setColor(Color.BLACK);

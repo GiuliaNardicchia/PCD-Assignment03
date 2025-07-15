@@ -39,12 +39,10 @@ public class PixelGridView extends JFrame {
                         colorChangeListeners.forEach(l -> l.colorChanged(color.getRGB()));
                     }
                 });
-        // add panel and a button to the button to change color
         add(panel, BorderLayout.CENTER);
         add(colorChangeButton, BorderLayout.SOUTH);
         getContentPane().add(panel);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        // Add a window listener to handle the closing event
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -53,9 +51,8 @@ public class PixelGridView extends JFrame {
                     view.getController().sendGoodbyeMessage();
                 } catch (IOException ignored) {
                 }
-                // Then actually exit
                 dispose(); // release resources
-                System.exit(0); // close application
+                System.exit(0);
             }
         });
         hideCursor();
@@ -90,7 +87,6 @@ public class PixelGridView extends JFrame {
         var blankCursor =
                 Toolkit.getDefaultToolkit()
                         .createCustomCursor(cursorImage, new Point(0, 0), "blank cursor");
-        // Set the blank cursor to the JFrame.
         this.getContentPane().setCursor(blankCursor);
     }
 
