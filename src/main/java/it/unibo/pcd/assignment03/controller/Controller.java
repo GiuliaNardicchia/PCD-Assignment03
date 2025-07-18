@@ -6,6 +6,7 @@ import it.unibo.pcd.assignment03.model.PixelGrid;
 import it.unibo.pcd.assignment03.view.View;
 
 import java.io.IOException;
+import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -26,11 +27,11 @@ public interface Controller extends Remote {
 
     void sendGoodbyeMessage() throws IOException;
 
-    void joinSession(String sessionId) throws RemoteException;
+    void createSession(String sessionId, String host, int port) throws RemoteException;
 
-    void createSession(String sessionId) throws RemoteException;
+    void joinSession(String sessionId, String host, int port) throws RemoteException, NotBoundException;
 
-//    void addPeer(ControllerRemote peer) throws RemoteException;
+//    void addPeer(Controller peer) throws RemoteException;
 //    void updateGridCell(GridCellUpdateMessage gridCellUpdate) throws RemoteException;
 //    void updateBrushManager(BrushManager brushManager) throws RemoteException;
 //    void updatePixelGrid(PixelGrid pixelGrid) throws RemoteException;

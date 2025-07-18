@@ -1,8 +1,20 @@
 #!/usr/bin/env bash
 
+# Ferma eventuale rmiregistry (solo su Windows)
+echo "Controllo se rmiregistry è già in esecuzione..."
+taskkill //F //IM rmiregistry.exe > /dev/null 2>&1
+
+if [ $? -eq 0 ]; then
+  echo "rmiregistry terminato."
+else
+  echo "rmiregistry non era attivo o non è stato trovato."
+fi
+
 mkdir -p bin
 
-javac -d bin app/src/main/java/pcd/lab10/rmi/*.java
+shopt -s globstar
+
+javac -d bin src/main/java/it/unibo/pcd/assignment03/**/*.java
 if [ $? -ne 0 ]; then
   echo "Errore durante la compilazione."
   exit 1
@@ -14,7 +26,7 @@ echo "Avvio rmiregistry..."
 ( rmiregistry & )
 sleep 1
 
-cd ..
+#cd ..
 
-echo "Avvio server..."
-java -classpath bin -Djava.rmi.server.codebase=file:bin/ pcd.lab10.rmi.Test02_Server2
+#echo "Avvio server..."
+#java -classpath bin -Djava.rmi.server.codebase=file:bin/ it.unibo.pcd.assignment03.Launcher

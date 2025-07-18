@@ -1,11 +1,13 @@
 package it.unibo.pcd.assignment03.controller;
 
-public class PeerInfo {
+import java.io.Serializable;
+
+public class PeerInfo implements Serializable {
 
     private final String host;
     private final int port;
 
-    public PeerInfo(String id, String host, int port) {
+    public PeerInfo(String host, int port) {
         this.host = host;
         this.port = port;
     }

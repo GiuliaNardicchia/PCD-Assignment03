@@ -2,6 +2,7 @@ package it.unibo.pcd.assignment03.model;
 
 import it.unibo.pcd.assignment03.controller.Controller;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Objects;
 import java.util.Set;
