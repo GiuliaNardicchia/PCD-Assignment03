@@ -48,7 +48,7 @@ public class ModelImpl implements Model {
     }
 
     @Override
-    public void updateLocalBrushPosition(int x, int y) {
+    public void updateLocalBrush(int x, int y) {
         this.localBrush.updatePosition(x, y);
     }
 

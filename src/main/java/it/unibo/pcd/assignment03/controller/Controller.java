@@ -12,7 +12,7 @@ public interface Controller {
 
     View getView();
 
-    void updateLocalBrushPosition(int x, int y);
+    void updateLocalBrush(int x, int y);
 
     void updatePixelGrid(int x, int y);
 

@@ -15,7 +15,7 @@ public interface Model {
 
     PixelGrid getGrid();
 
-    void updateLocalBrushPosition(int x, int y);
+    void updateLocalBrush(int x, int y);
 
     void updatePixelGrid(int x, int y,  int color);
 

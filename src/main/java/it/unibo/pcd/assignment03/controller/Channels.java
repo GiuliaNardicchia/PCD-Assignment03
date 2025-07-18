@@ -1,7 +1,7 @@
 package it.unibo.pcd.assignment03.controller;
 
 public enum Channels {
-    BRUSH_POSITION_EXCHANGE("brush", "info"),
+    BRUSH_EXCHANGE("brush", "info"),
     GRID_CELL_EXCHANGE("grid", "cell"),
     WELCOME_EXCHANGE("welcome_sharing", "info"),
     WELCOME_GRID_EXCHANGE("welcome_sharing", "grid"),

@@ -98,8 +98,8 @@ public class ControllerImpl implements Controller {
     public ControllerImpl() {
         try {
             this.channelManager = new ChannelManagerImpl();
-            this.brushExchangeQueueName = channelManager.exchangeDeclare(Channels.BRUSH_POSITION_EXCHANGE, "fanout");
-            this.channelManager.queueBind(this.brushExchangeQueueName, Channels.BRUSH_POSITION_EXCHANGE);
+            this.brushExchangeQueueName = channelManager.exchangeDeclare(Channels.BRUSH_EXCHANGE, "fanout");
+            this.channelManager.queueBind(this.brushExchangeQueueName, Channels.BRUSH_EXCHANGE);
             this.cellExchangeQueueName = channelManager.exchangeDeclare(Channels.GRID_CELL_EXCHANGE, "fanout");
             this.channelManager.queueBind(this.cellExchangeQueueName, Channels.GRID_CELL_EXCHANGE);
             this.welcomeExchangeQueueName = channelManager.exchangeDeclare(Channels.WELCOME_EXCHANGE, "fanout");
@@ -135,8 +135,8 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void updateLocalBrushPosition(int x, int y) {
-        this.model.updateLocalBrushPosition(x, y);
+    public void updateLocalBrush(int x, int y) {
+        this.model.updateLocalBrush(x, y);
         sendLocalBrushInfo();
     }
 
@@ -164,7 +164,7 @@ public class ControllerImpl implements Controller {
         Gson gson = gsonBuilder.create();
         String message = gson.toJson(this.model.getLocalBrush());
         try {
-            this.channelManager.sendMessage(Channels.BRUSH_POSITION_EXCHANGE, message);
+            this.channelManager.sendMessage(Channels.BRUSH_EXCHANGE, message);
         } catch (IOException ignored) {
         }
     }
