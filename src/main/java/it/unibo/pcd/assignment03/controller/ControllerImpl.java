@@ -95,9 +95,9 @@ public class ControllerImpl implements Controller {
         this.view.refresh();
     };
 
-    public ControllerImpl() {
+    public ControllerImpl(String host) {
         try {
-            this.channelManager = new ChannelManagerImpl();
+            this.channelManager = new ChannelManagerImpl(host);
             this.brushExchangeQueueName = channelManager.exchangeDeclare(Channels.BRUSH_EXCHANGE, "fanout");
             this.channelManager.queueBind(this.brushExchangeQueueName, Channels.BRUSH_EXCHANGE);
             this.cellExchangeQueueName = channelManager.exchangeDeclare(Channels.GRID_CELL_EXCHANGE, "fanout");

@@ -13,9 +13,9 @@ public class ChannelManagerImpl implements ChannelManager {
     private final Channel channel;
 
 
-    public ChannelManagerImpl() throws IOException, TimeoutException {
+    public ChannelManagerImpl(String host) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setHost(host);
         Connection connection = factory.newConnection();
         this.channel = connection.createChannel();
     }
