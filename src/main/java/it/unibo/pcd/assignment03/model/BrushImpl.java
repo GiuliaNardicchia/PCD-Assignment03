@@ -1,10 +1,11 @@
 package it.unibo.pcd.assignment03.model;
 
 import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Random;
 
-public class BrushImpl implements Brush {
+public class BrushImpl implements Brush, Serializable {
     private int x;
     private int y;
     private int color;

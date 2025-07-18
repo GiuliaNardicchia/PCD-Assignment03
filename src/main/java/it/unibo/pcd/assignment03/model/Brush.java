@@ -1,15 +1,17 @@
 package it.unibo.pcd.assignment03.model;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-public interface Brush {
-    public void updatePosition(final int x, final int y);
+public interface Brush extends Remote {
+    void updatePosition(final int x, final int y) throws RemoteException;
 
-    public int getX();
+    int getX() throws RemoteException;
 
-    public int getY();
+    int getY() throws RemoteException;
 
-    public int getColor();
+    int getColor() throws RemoteException;
 
-    public void setColor(int color);
+    void setColor(int color) throws RemoteException;
 
-    String getId();
+    String getId() throws RemoteException;
 }

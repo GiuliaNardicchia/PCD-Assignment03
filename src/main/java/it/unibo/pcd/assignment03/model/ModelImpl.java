@@ -2,6 +2,7 @@ package it.unibo.pcd.assignment03.model;
 
 import it.unibo.pcd.assignment03.controller.Controller;
 
+import java.rmi.RemoteException;
 import java.util.Objects;
 import java.util.Set;
 
@@ -15,11 +16,11 @@ public class ModelImpl implements Model {
     private PixelGrid grid;
     private final Brush localBrush;
 
-    public ModelImpl(int numRows, int numCols) {
+    public ModelImpl(int numRows, int numCols) throws RemoteException {
         Brush localBrush = new BrushImpl(0, 0, randomColor());
         this.brushManager.addBrush(localBrush);
         this.localBrush = localBrush;
-        this.grid = new PixelGrid(numRows, numCols);
+        this.grid = new PixelGridImpl(numRows, numCols);
     }
 
     @Override
@@ -48,17 +49,17 @@ public class ModelImpl implements Model {
     }
 
     @Override
-    public void updateLocalBrush(int x, int y) {
+    public void updateLocalBrush(int x, int y) throws RemoteException {
         this.localBrush.updatePosition(x, y);
     }
 
     @Override
-    public void updatePixelGrid(int x, int y, int color) {
+    public void updatePixelGrid(int x, int y, int color) throws RemoteException {
         this.grid.set(x, y, color);
     }
 
     @Override
-    public void updateLocalBrushColor(int color) {
+    public void updateLocalBrushColor(int color) throws RemoteException {
 
         this.localBrush.setColor(color);
     }
@@ -69,27 +70,48 @@ public class ModelImpl implements Model {
     }
 
     @Override
-    public void updateGridFromSource(PixelGrid sourceGrid) {
+    public void updateGridFromSource(PixelGrid sourceGrid) throws RemoteException {
         this.grid.setGrid(sourceGrid.getGrid());
     }
 
     @Override
-    public void setBrushes(Set<Brush> brushes) {
+    public void setBrushes(Set<Brush> brushes) throws RemoteException {
         brushes.add(this.localBrush);
         this.brushManager.setBrushes(brushes);
     }
 
     @Override
-    public void updateBrushes(Brush brush) {
+    public void updateBrushes(Brush brush) throws RemoteException {
+        // TODO
         this.brushManager.getBrushes().stream()
-                .filter(b -> Objects.equals(b.getId(), brush.getId()))
+                .filter(b -> {
+                    try {
+                        return Objects.equals(b.getId(), brush.getId());
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .findFirst()
                 .ifPresentOrElse(
                         b -> {
-                            b.updatePosition(brush.getX(), brush.getY());
-                            b.setColor(brush.getColor());
+                            try {
+                                b.updatePosition(brush.getX(), brush.getY());
+                            } catch (RemoteException e) {
+                                throw new RuntimeException(e);
+                            }
+                            try {
+                                b.setColor(brush.getColor());
+                            } catch (RemoteException e) {
+                                throw new RuntimeException(e);
+                            }
                         },
-                        () -> this.brushManager.getBrushes().add(brush)
+                        () -> {
+                            try {
+                                this.brushManager.getBrushes().add(brush);
+                            } catch (RemoteException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                 );
     }
 }

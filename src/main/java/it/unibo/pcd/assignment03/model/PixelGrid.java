@@ -1,48 +1,20 @@
 package it.unibo.pcd.assignment03.model;
 
-import java.util.Arrays;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-public class PixelGrid {
-	private final int nRows;
-	private final int nColumns;
+public interface PixelGrid extends Remote {
+    void clear() throws RemoteException;
 
-	private int[][] grid;
-	
-	public PixelGrid(final int nRows, final int nColumns) {
-		this.nRows = nRows;
-		this.nColumns = nColumns;
-		grid = new int[nRows][nColumns];
-	}
+    void set(int x, int y, int color) throws RemoteException;
 
-	public void clear() {
-		for (int i = 0; i < nRows; i++) {
-			Arrays.fill(grid[i], 0);
-		}
-	}
-	
-	public void set(final int x, final int y, final int color) {
-		grid[y][x] = color;
-	}
-	
-	public int get(int x, int y) {
-		return grid[y][x];
-	}
-	
-	public int getNumRows() {
-		return this.nRows;
-	}
+    int get(int x, int y) throws RemoteException;
 
-	public void setGrid(int[][] grid) {
-		this.grid = grid;
-	}
+    int getNumRows() throws RemoteException;
 
-	public int[][] getGrid() {
-		return grid;
-	}
+    void setGrid(int[][] grid) throws RemoteException;
 
-	public int getNumColumns() {
-		return this.nColumns;
-	}
+    int[][] getGrid() throws RemoteException;
 
-
+    int getNumColumns() throws RemoteException;
 }

@@ -1,11 +1,13 @@
 package it.unibo.pcd.assignment03.view;
 
 import it.unibo.pcd.assignment03.model.PixelGrid;
+import it.unibo.pcd.assignment03.model.PixelGridImpl;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
@@ -36,7 +38,14 @@ public class PixelGridView extends JFrame {
                 e -> {
                     var color = JColorChooser.showDialog(this, "Choose a color", Color.BLACK);
                     if (color != null) {
-                        colorChangeListeners.forEach(l -> l.colorChanged(color.getRGB()));
+                        // TODO
+                        colorChangeListeners.forEach(l -> {
+                            try {
+                                l.colorChanged(color.getRGB());
+                            } catch (RemoteException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        });
                     }
                 });
         add(panel, BorderLayout.CENTER);
@@ -94,11 +103,28 @@ public class PixelGridView extends JFrame {
         return new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int dx = w / grid.getNumColumns();
-                int dy = h / grid.getNumRows();
+                //TODO
+                int dx = 0;
+                try {
+                    dx = w / grid.getNumColumns();
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+                int dy = 0;
+                try {
+                    dy = h / grid.getNumRows();
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
                 int col = e.getX() / dx;
                 int row = e.getY() / dy;
-                pixelListeners.forEach(l -> l.selectedCell(col, row));
+                pixelListeners.forEach(l -> {
+                    try {
+                        l.selectedCell(col, row);
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
             }
 
             @Override
@@ -127,7 +153,14 @@ public class PixelGridView extends JFrame {
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                movedListener.forEach(l -> l.mouseMoved(e.getX(), e.getY()));
+                // TODO
+                movedListener.forEach(l -> {
+                    try {
+                        l.mouseMoved(e.getX(), e.getY());
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
             }
         };
     }
