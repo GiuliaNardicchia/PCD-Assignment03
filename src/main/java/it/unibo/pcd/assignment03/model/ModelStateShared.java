@@ -14,6 +14,8 @@ public interface ModelStateShared extends Remote {
     void updateGridCell(GridCellUpdateMessage gridCellUpdate) throws RemoteException;
 
     PixelGrid getPixelGrid() throws RemoteException;
+
+    void setPixelGrid(PixelGridImpl pixelGrid) throws RemoteException;
 //    void updateBrushManager(BrushManager brushManager) throws RemoteException;
 //    void updatePixelGrid(PixelGrid pixelGrid) throws RemoteException;
 }

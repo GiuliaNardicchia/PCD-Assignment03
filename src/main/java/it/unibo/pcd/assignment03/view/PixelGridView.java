@@ -14,15 +14,15 @@ import javax.swing.*;
 
 public class PixelGridView extends JFrame {
     private final VisualiserPanel panel;
-    private final PixelGrid grid;
     private final int w, h;
     private final List<PixelGridEventListener> pixelListeners;
     private final List<MouseMovedListener> movedListener;
+    private final View view;
 
     private final List<ColorChangeListener> colorChangeListeners;
 
-    public PixelGridView(PixelGrid grid, BrushDrawer brushDrawer, int w, int h, View view) {
-        this.grid = grid;
+    public PixelGridView(View view, int w, int h) {
+        this.view = view;
         this.w = w;
         this.h = h;
         pixelListeners = new ArrayList<>();
@@ -30,7 +30,7 @@ public class PixelGridView extends JFrame {
         colorChangeListeners = new ArrayList<>();
         setTitle(".:: PixelArt ::.");
         setResizable(false);
-        panel = new VisualiserPanel(grid, brushDrawer, w, h);
+        panel = new VisualiserPanel(this.view, w, h);
         panel.addMouseListener(createMouseListener());
         panel.addMouseMotionListener(createMotionListener());
         var colorChangeButton = new JButton("Change color");
@@ -106,13 +106,13 @@ public class PixelGridView extends JFrame {
                 //TODO
                 int dx = 0;
                 try {
-                    dx = w / grid.getNumColumns();
+                    dx = w / view.getController().getModel().getGrid().getNumColumns();
                 } catch (RemoteException ex) {
                     throw new RuntimeException(ex);
                 }
                 int dy = 0;
                 try {
-                    dy = h / grid.getNumRows();
+                    dy = h / view.getController().getModel().getGrid().getNumRows();
                 } catch (RemoteException ex) {
                     throw new RuntimeException(ex);
                 }

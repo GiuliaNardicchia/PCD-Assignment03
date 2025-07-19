@@ -59,8 +59,9 @@ public class ControllerImpl implements Controller, Serializable {
 
     @Override
     public void updatePixelGrid(int x, int y) throws RemoteException {
-        this.view.setPixelGridView(new PixelGridView(this.model.getStateShared().getPixelGrid(), new BrushDrawerImpl(this.model.getBrushManager()), 600, 600, this.view));
-        this.model.getStateShared().updateGridCell(new GridCellUpdateMessage(x, y, this.model.getLocalBrush().getColor()));
+//        this.view.setPixelGridView(new PixelGridView(this.model.getStateShared().getPixelGrid(), new BrushDrawerImpl(this.model.getBrushManager()), 600, 600, this.view));
+        //this.model.getStateShared().updateGridCell(new GridCellUpdateMessage(x, y, this.model.getLocalBrush().getColor()));
+        this.model.updatePixelGrid(x, y, this.model.getLocalBrush().getColor());
         this.view.refresh();
     }
 
@@ -75,13 +76,12 @@ public class ControllerImpl implements Controller, Serializable {
     }
 
     @Override
-    public void start() throws IOException {
+    public void start() {
         this.view.display();
-        this.model.getLocalBrush();
     }
 
     @Override
-    public void sendGoodbyeMessage() throws IOException {
+    public void sendGoodbyeMessage() {
 //        String message = gson.toJson(this.model.getLocalBrush());
     }
 
@@ -93,13 +93,17 @@ public class ControllerImpl implements Controller, Serializable {
         Registry registry = LocateRegistry.createRegistry(port);
         registry.rebind(MODEL_BINDING_NAME, modelStateSharedStub);
         this.model.setStateShared(modelStateShared);
+
+//        this.view.setPixelGridView(new PixelGridView(new BrushDrawerImpl(this.model.getBrushManager()), 600, 600, this.view));
+
+
 //        this.model.getStateShared().printCounter();
 //        this.model.getStateShared().setCounter(1, new SerializableConsumer<>());
 //        this.model.getStateShared().printCounter();
     }
 
     @Override
-    public void joinSession(String sessionId, String host, int port) {
+    public void joinSession(String sessionId, String host, int port) throws RemoteException {
         this.view.changeFrame();
         try {
             Registry registry = LocateRegistry.getRegistry(host, port);

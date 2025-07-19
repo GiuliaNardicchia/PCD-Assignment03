@@ -11,15 +11,15 @@ import java.util.Set;
 public class BrushDrawerImpl implements BrushDrawer {
     private static final int BRUSH_SIZE = 10;
     private static final int STROKE_SIZE = 2;
-    private final BrushManager brushManager;
+    private final View view;
 
-    public BrushDrawerImpl(BrushManager brushManager) {
-        this.brushManager = brushManager;
+    public BrushDrawerImpl(View view) {
+        this.view = view;
     }
 
     @Override
     public void draw(Graphics2D g) throws RemoteException {
-        this.brushManager.getBrushes().forEach(brush -> {
+        this.view.getController().getModel().getBrushManager().getBrushes().forEach(brush -> {
             // TODO
             try {
                 g.setColor(new Color(brush.getColor()));

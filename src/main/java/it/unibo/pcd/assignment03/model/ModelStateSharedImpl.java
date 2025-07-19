@@ -6,11 +6,8 @@ import java.rmi.RemoteException;
 
 public class ModelStateSharedImpl implements ModelStateShared {
 
-    private static final int NUM_ROWS = 40;
-    private static final int NUM_COLS = 40;
-
     private int counter;
-    private PixelGrid grid = new PixelGridImpl(NUM_ROWS, NUM_COLS);;
+    private PixelGrid grid;
 
     @Override
     public void setCounter(int counter, SerializableConsumer<Integer> andThen) throws RemoteException {
@@ -36,5 +33,10 @@ public class ModelStateSharedImpl implements ModelStateShared {
     @Override
     public PixelGrid getPixelGrid() throws RemoteException {
         return this.grid;
+    }
+
+    @Override
+    public void setPixelGrid(PixelGridImpl pixelGrid) throws RemoteException {
+        this.grid = pixelGrid;
     }
 }

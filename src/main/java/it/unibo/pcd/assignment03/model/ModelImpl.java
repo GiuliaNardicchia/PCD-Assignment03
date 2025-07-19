@@ -14,12 +14,15 @@ public class ModelImpl implements Model {
     private final BrushManager brushManager = new BrushManagerImpl();
 //    private PixelGrid grid;
     private final Brush localBrush;
+    private final int numRows;
+    private final int numCols;
 
     public ModelImpl(int numRows, int numCols) throws RemoteException {
+        this.numRows = numRows;
+        this.numCols = numCols;
         Brush localBrush = new BrushImpl(0, 0, randomColor());
         this.brushManager.addBrush(localBrush);
         this.localBrush = localBrush;
-//        this.grid = new PixelGridImpl(numRows, numCols);
     }
 
     @Override
@@ -42,10 +45,10 @@ public class ModelImpl implements Model {
         return this.brushManager;
     }
 
-//    @Override
-//    public PixelGrid getGrid() {
-//        return this.grid;
-//    }
+    @Override
+    public PixelGrid getGrid() throws RemoteException {
+        return this.stateShared.getPixelGrid();
+    }
 
     @Override
     public ModelStateShared getStateShared() {
@@ -57,26 +60,25 @@ public class ModelImpl implements Model {
         this.localBrush.updatePosition(x, y);
     }
 
-//    @Override
-//    public void updatePixelGrid(int x, int y, int color) throws RemoteException {
-//        this.grid.set(x, y, color);
-//    }
+    @Override
+    public void updatePixelGrid(int x, int y, int color) throws RemoteException {
+        this.stateShared.getPixelGrid().set(x, y, color);
+    }
 
     @Override
     public void updateLocalBrushColor(int color) throws RemoteException {
-
         this.localBrush.setColor(color);
     }
 
-//    @Override
-//    public void setGrid(PixelGrid grid){
-//        this.grid = grid;
-//    }
+    @Override
+    public void setGrid(PixelGrid grid) throws RemoteException {
+        this.stateShared.getPixelGrid().setGrid(grid.getGrid());
+    }
 
-//    @Override
-//    public void updateGridFromSource(PixelGrid sourceGrid) throws RemoteException {
-//        this.grid.setGrid(sourceGrid.getGrid());
-//    }
+    @Override
+    public void updateGridFromSource(PixelGrid sourceGrid) throws RemoteException {
+        this.stateShared.getPixelGrid().setGrid(sourceGrid.getGrid());
+    }
 
     @Override
     public void setBrushes(Set<Brush> brushes) throws RemoteException {
@@ -85,8 +87,9 @@ public class ModelImpl implements Model {
     }
 
     @Override
-    public void setStateShared(ModelStateShared stateShared) {
+    public void setStateShared(ModelStateShared stateShared) throws RemoteException {
         this.stateShared = stateShared;
+        this.stateShared.setPixelGrid(new PixelGridImpl(this.numRows, this.numCols));
     }
 
     @Override
