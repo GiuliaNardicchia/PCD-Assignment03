@@ -11,6 +11,13 @@ public class BrushImpl implements Brush, Serializable {
     private int color;
     private final int id;
 
+    public BrushImpl(int id, int x, int y, int color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.id = id;
+    }
+
     public BrushImpl(int x, int y, int color) {
         this.x = x;
         this.y = y;
@@ -45,29 +52,24 @@ public class BrushImpl implements Brush, Serializable {
     }
 
     @Override
-    public String getId() {
-        return String.valueOf(this.id);
+    public int getId() {
+        return this.id;
+    }
+
+    @Override
+    public String toString() {
+        return "BrushImpl{" + "x=" + x + ", y=" + y + ", color=" + color + ", id=" + id + '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         BrushImpl brush = (BrushImpl) o;
-        return x == brush.x && y == brush.y && color == brush.color;
+        return id == brush.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y, color);
-    }
-
-    @Override
-    public String toString() {
-        return "BrushImpl{" +
-                "x=" + x +
-                ", y=" + y +
-                ", color=" + color +
-                ", id=" + id +
-                '}';
+        return Objects.hashCode(id);
     }
 }

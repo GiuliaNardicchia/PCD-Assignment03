@@ -10,12 +10,15 @@ public class BrushManagerImpl implements BrushManager, Serializable {
     private Set<Brush> brushes = new HashSet<>();
 
     @Override
-    public void addBrush(Brush brush) {
-        this.brushes.add(brush);
+    public synchronized void addBrush(Brush brush) throws RemoteException {
+        System.out.println("Brushes before adding: " + this.brushes);
+        System.out.println("Adding brush: " + brush);
+        this.brushes.add(new BrushImpl(brush.getId(), brush.getX(), brush.getY(), brush.getColor()));
+        System.out.println("Brushes after adding: " + this.brushes);
     }
 
     @Override
-    public void removeBrush(Brush brush) {
+    public synchronized void removeBrush(Brush brush) throws RemoteException {
         this.brushes.removeIf(other -> {
             // TODO
             try {
@@ -27,12 +30,35 @@ public class BrushManagerImpl implements BrushManager, Serializable {
     }
 
     @Override
-    public Set<Brush> getBrushes() {
+    public synchronized Set<Brush> getBrushes() throws RemoteException {
         return this.brushes;
     }
 
     @Override
-    public void setBrushes(Set<Brush> brushes) {
+    public synchronized void setBrushes(Set<Brush> brushes) throws RemoteException {
         this.brushes = brushes;
+    }
+
+    @Override
+    public void updateBrushPosition(Brush localBrush, int x, int y) throws RemoteException {
+        this.brushes.stream()
+                .filter(b -> {
+                    try {
+                        return Objects.equals(b.getId(), localBrush.getId());
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .findFirst()
+                .ifPresentOrElse(
+                        b -> {
+                            try {
+                                b.updatePosition(x, y);
+                            } catch (RemoteException e) {
+                                throw new RuntimeException(e);
+                            }
+                        },
+                        () -> System.out.println("Brush not found: " + localBrush)
+                );
     }
 }

@@ -58,7 +58,7 @@ public class ModelImpl implements Model {
 
     @Override
     public void updateLocalBrush(int x, int y) throws RemoteException {
-        this.localBrush.updatePosition(x, y);
+        this.stateShared.updateBrushPosition(this.localBrush, x, y);
     }
 
     @Override
@@ -84,13 +84,16 @@ public class ModelImpl implements Model {
     @Override
     public void setBrushes(Set<Brush> brushes) throws RemoteException {
         brushes.add(this.localBrush);
-        this.stateShared.getBrushManager().setBrushes(brushes);
+//        this.stateShared.getBrushManager().setBrushes(brushes);
     }
 
     @Override
-    public void setStateShared(ModelStateShared stateShared) throws RemoteException {
+    public synchronized void setStateShared(ModelStateShared stateShared) throws RemoteException {
         this.stateShared = stateShared;
-        this.stateShared.getBrushManager().addBrush(this.localBrush);
+        System.out.println("Setting local brush in state shared: " + this.localBrush);
+        this.stateShared.addBrush(this.localBrush);
+        this.stateShared.getBrushes().forEach(b -> System.out.println("Brush in state shared: " + b));
+//        this.stateShared.getBrushManager().addBrush(this.localBrush);
     }
 
     @Override

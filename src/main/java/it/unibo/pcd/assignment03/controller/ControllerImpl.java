@@ -54,7 +54,6 @@ public class ControllerImpl implements Controller, Serializable {
     @Override
     public void updateLocalBrush(int x, int y) throws RemoteException {
         this.model.updateLocalBrush(x, y);
-        sendLocalBrushInfo();
     }
 
     @Override
@@ -68,11 +67,6 @@ public class ControllerImpl implements Controller, Serializable {
     @Override
     public void updateLocalBrushColor(int color) throws RemoteException {
         this.model.updateLocalBrushColor(color);
-        this.sendLocalBrushInfo();
-    }
-
-    private void sendLocalBrushInfo() {
-//        String message = gson.toJson(this.model.getLocalBrush());
     }
 
     @Override
@@ -87,12 +81,12 @@ public class ControllerImpl implements Controller, Serializable {
 
     @Override
     public void createSession(String sessionId, String host, int port) throws RemoteException {
-        this.view.changeFrame();
         ModelStateShared modelStateShared = new ModelStateSharedImpl(new PixelGridImpl(this.model.getNumRows(), this.model.getNumCols()), new BrushManagerImpl());
         ModelStateShared modelStateSharedStub = (ModelStateShared) UnicastRemoteObject.exportObject(modelStateShared, 0);
         Registry registry = LocateRegistry.createRegistry(port);
         registry.rebind(MODEL_BINDING_NAME, modelStateSharedStub);
         this.model.setStateShared(modelStateShared);
+        this.view.changeFrame();
 
 //        this.view.setPixelGridView(new PixelGridView(new BrushDrawerImpl(this.model.getBrushManager()), 600, 600, this.view));
 
@@ -109,10 +103,22 @@ public class ControllerImpl implements Controller, Serializable {
             Registry registry = LocateRegistry.getRegistry(host, port);
             ModelStateShared modelStateShared = (ModelStateShared) registry.lookup(MODEL_BINDING_NAME);
             this.model.setStateShared(modelStateShared);
-//            this.model.getStateShared().printCounter();
-//            this.model.getStateShared().setCounter(this.model.getStateShared().getCounter() + 1, new SerializableConsumer<>());
-//            this.model.getStateShared().printCounter();
             System.out.println("Joined session with model state shared.");
+//            Map<String, PeerInfo> peers = modelStateShared.getPeerRegistryService();
+//            for (Map.Entry<String, PeerInfo> entry : peers.entrySet()) {
+//                PeerInfo peerInfo = entry.getValue();
+//                try {
+//                    Registry peerRegistry = LocateRegistry.getRegistry(peerInfo.getHost(), peerInfo.getPort());
+//                    ControllerRemote peer = (ControllerRemote) peerRegistry.lookup(CONTROLLER_BINDING_NAME);
+//                    this.controllerRemote.addPeer(peer);
+//                    peer.addPeer(this.controllerRemote);
+//                    peer.printHello();
+//                    System.out.println("Connesso a peer " + entry.getKey() + " su " + peerInfo.getHost() + ":" + peerInfo.getPort());
+//                } catch (Exception e) {
+//                    System.out.println("Errore nel connettersi a peer " + entry.getKey());
+//                    e.printStackTrace();
+//                }
+//            }
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
         }

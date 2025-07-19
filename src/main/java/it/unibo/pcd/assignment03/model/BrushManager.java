@@ -13,4 +13,6 @@ public interface BrushManager extends Remote {
     Set<Brush> getBrushes() throws RemoteException;
 
     void setBrushes(Set<Brush> brushes) throws RemoteException;
+
+    void updateBrushPosition(Brush localBrush, int x, int y) throws RemoteException;
 }

@@ -13,5 +13,5 @@ public interface Brush extends Remote {
 
     void setColor(int color) throws RemoteException;
 
-    String getId() throws RemoteException;
+    int getId() throws RemoteException;
 }
