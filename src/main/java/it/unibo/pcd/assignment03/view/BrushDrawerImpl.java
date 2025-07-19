@@ -19,7 +19,7 @@ public class BrushDrawerImpl implements BrushDrawer {
 
     @Override
     public void draw(Graphics2D g) throws RemoteException {
-        this.view.getController().getModel().getBrushManager().getBrushes().forEach(brush -> {
+        this.view.getController().getModel().getStateShared().getBrushManager().getBrushes().forEach(brush -> {
             // TODO
             try {
                 g.setColor(new Color(brush.getColor()));

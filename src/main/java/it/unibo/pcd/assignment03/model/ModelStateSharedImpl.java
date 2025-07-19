@@ -6,26 +6,32 @@ import java.rmi.RemoteException;
 
 public class ModelStateSharedImpl implements ModelStateShared {
 
-    private int counter;
+//    private int counter;
     private PixelGrid grid;
+    private BrushManager brushManager;
 
-    @Override
-    public void setCounter(int counter, SerializableConsumer<Integer> andThen) throws RemoteException {
-        this.counter = counter;
-        andThen.accept(this.counter);
+    public ModelStateSharedImpl(PixelGrid grid, BrushManager brushManager) throws RemoteException {
+        this.grid = grid;
+        this.brushManager = brushManager;
     }
 
-    @Override
-    public int getCounter() throws RemoteException {
-        return this.counter;
-    }
-    @Override
-    public void printCounter() throws RemoteException {
-        System.out.println("Counter value: " + this.counter);
-    }
+//    @Override
+//    public void setCounter(int counter, SerializableConsumer<Integer> andThen) throws RemoteException {
+//        this.counter = counter;
+//        andThen.accept(this.counter);
+//    }
+//
+//    @Override
+//    public int getCounter() throws RemoteException {
+//        return this.counter;
+//    }
+//    @Override
+//    public void printCounter() throws RemoteException {
+//        System.out.println("Counter value: " + this.counter);
+//    }
 
     @Override
-    public void updateGridCell(GridCellUpdateMessage gridCellUpdate) throws RemoteException {
+    public void setGridCell(GridCellUpdateMessage gridCellUpdate) throws RemoteException {
         this.grid.set(gridCellUpdate.getX(), gridCellUpdate.getY(), gridCellUpdate.getColor());
         System.out.println("Updated cell at (" + gridCellUpdate.getX() + ", " + gridCellUpdate.getY() + ") to color " + gridCellUpdate.getColor());
     }
@@ -38,5 +44,15 @@ public class ModelStateSharedImpl implements ModelStateShared {
     @Override
     public void setPixelGrid(PixelGridImpl pixelGrid) throws RemoteException {
         this.grid = pixelGrid;
+    }
+
+    @Override
+    public BrushManager getBrushManager() throws RemoteException {
+        return this.brushManager;
+    }
+
+    @Override
+    public void setBrushManager(BrushManager brushManager) throws RemoteException {
+        this.brushManager = brushManager;
     }
 }

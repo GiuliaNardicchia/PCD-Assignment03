@@ -11,8 +11,6 @@ import static it.unibo.pcd.assignment03.utils.Utils.randomColor;
 public class ModelImpl implements Model {
     private Controller controller;
     private ModelStateShared stateShared;
-    private final BrushManager brushManager = new BrushManagerImpl();
-//    private PixelGrid grid;
     private final Brush localBrush;
     private final int numRows;
     private final int numCols;
@@ -20,9 +18,7 @@ public class ModelImpl implements Model {
     public ModelImpl(int numRows, int numCols) throws RemoteException {
         this.numRows = numRows;
         this.numCols = numCols;
-        Brush localBrush = new BrushImpl(0, 0, randomColor());
-        this.brushManager.addBrush(localBrush);
-        this.localBrush = localBrush;
+        this.localBrush = new BrushImpl(0, 0, randomColor());
     }
 
     @Override
@@ -41,11 +37,6 @@ public class ModelImpl implements Model {
     }
 
     @Override
-    public BrushManager getBrushManager() {
-        return this.brushManager;
-    }
-
-    @Override
     public PixelGrid getGrid() throws RemoteException {
         return this.stateShared.getPixelGrid();
     }
@@ -53,6 +44,16 @@ public class ModelImpl implements Model {
     @Override
     public ModelStateShared getStateShared() {
         return stateShared;
+    }
+
+    @Override
+    public int getNumCols() {
+        return numCols;
+    }
+
+    @Override
+    public int getNumRows() {
+        return numRows;
     }
 
     @Override
@@ -83,19 +84,19 @@ public class ModelImpl implements Model {
     @Override
     public void setBrushes(Set<Brush> brushes) throws RemoteException {
         brushes.add(this.localBrush);
-        this.brushManager.setBrushes(brushes);
+        this.stateShared.getBrushManager().setBrushes(brushes);
     }
 
     @Override
     public void setStateShared(ModelStateShared stateShared) throws RemoteException {
         this.stateShared = stateShared;
-        this.stateShared.setPixelGrid(new PixelGridImpl(this.numRows, this.numCols));
+        this.stateShared.getBrushManager().addBrush(this.localBrush);
     }
 
     @Override
     public void updateBrushes(Brush brush) throws RemoteException {
         // TODO
-        this.brushManager.getBrushes().stream()
+        this.stateShared.getBrushManager().getBrushes().stream()
                 .filter(b -> {
                     try {
                         return Objects.equals(b.getId(), brush.getId());
@@ -119,7 +120,7 @@ public class ModelImpl implements Model {
                         },
                         () -> {
                             try {
-                                this.brushManager.getBrushes().add(brush);
+                                this.stateShared.getBrushManager().getBrushes().add(brush);
                             } catch (RemoteException e) {
                                 throw new RuntimeException(e);
                             }

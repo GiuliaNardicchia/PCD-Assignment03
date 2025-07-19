@@ -88,7 +88,7 @@ public class ControllerImpl implements Controller, Serializable {
     @Override
     public void createSession(String sessionId, String host, int port) throws RemoteException {
         this.view.changeFrame();
-        ModelStateShared modelStateShared = new ModelStateSharedImpl();
+        ModelStateShared modelStateShared = new ModelStateSharedImpl(new PixelGridImpl(this.model.getNumRows(), this.model.getNumCols()), new BrushManagerImpl());
         ModelStateShared modelStateSharedStub = (ModelStateShared) UnicastRemoteObject.exportObject(modelStateShared, 0);
         Registry registry = LocateRegistry.createRegistry(port);
         registry.rebind(MODEL_BINDING_NAME, modelStateSharedStub);

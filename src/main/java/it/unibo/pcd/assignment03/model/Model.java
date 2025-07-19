@@ -12,13 +12,15 @@ public interface Model {
 
     Brush getLocalBrush() throws RemoteException;
 
-    BrushManager getBrushManager() throws RemoteException;
-
 //    PixelGrid getGrid() throws RemoteException;
 
     PixelGrid getGrid() throws RemoteException;
 
     ModelStateShared getStateShared();
+
+    int getNumCols();
+
+    int getNumRows();
 
     void updateLocalBrush(int x, int y) throws RemoteException;
 
