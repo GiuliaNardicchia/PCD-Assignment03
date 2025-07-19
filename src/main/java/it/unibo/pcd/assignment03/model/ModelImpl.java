@@ -1,6 +1,7 @@
 package it.unibo.pcd.assignment03.model;
 
 import it.unibo.pcd.assignment03.controller.Controller;
+import it.unibo.pcd.assignment03.controller.GridCellUpdateMessage;
 
 import java.rmi.RemoteException;
 import java.util.Objects;
@@ -15,7 +16,7 @@ public class ModelImpl implements Model {
     private final int numRows;
     private final int numCols;
 
-    public ModelImpl(int numRows, int numCols) throws RemoteException {
+    public ModelImpl(int numRows, int numCols) {
         this.numRows = numRows;
         this.numCols = numCols;
         this.localBrush = new BrushImpl(0, 0, randomColor());
@@ -63,7 +64,7 @@ public class ModelImpl implements Model {
 
     @Override
     public void updatePixelGrid(int x, int y, int color) throws RemoteException {
-        this.stateShared.getPixelGrid().set(x, y, color);
+        this.stateShared.setGridCell(new GridCellUpdateMessage(x, y, color));
     }
 
     @Override
@@ -72,62 +73,11 @@ public class ModelImpl implements Model {
     }
 
     @Override
-    public void setGrid(PixelGrid grid) throws RemoteException {
-        this.stateShared.getPixelGrid().setGrid(grid.getGrid());
-    }
-
-    @Override
-    public void updateGridFromSource(PixelGrid sourceGrid) throws RemoteException {
-        this.stateShared.getPixelGrid().setGrid(sourceGrid.getGrid());
-    }
-
-    @Override
-    public void setBrushes(Set<Brush> brushes) throws RemoteException {
-        brushes.add(this.localBrush);
-//        this.stateShared.getBrushManager().setBrushes(brushes);
-    }
-
-    @Override
     public synchronized void setStateShared(ModelStateShared stateShared) throws RemoteException {
         this.stateShared = stateShared;
         System.out.println("Setting local brush in state shared: " + this.localBrush);
         this.stateShared.addBrush(this.localBrush);
         this.stateShared.getBrushes().forEach(b -> System.out.println("Brush in state shared: " + b));
-//        this.stateShared.getBrushManager().addBrush(this.localBrush);
     }
 
-    @Override
-    public void updateBrushes(Brush brush) throws RemoteException {
-        // TODO
-        this.stateShared.getBrushManager().getBrushes().stream()
-                .filter(b -> {
-                    try {
-                        return Objects.equals(b.getId(), brush.getId());
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .findFirst()
-                .ifPresentOrElse(
-                        b -> {
-                            try {
-                                b.updatePosition(brush.getX(), brush.getY());
-                            } catch (RemoteException e) {
-                                throw new RuntimeException(e);
-                            }
-                            try {
-                                b.setColor(brush.getColor());
-                            } catch (RemoteException e) {
-                                throw new RuntimeException(e);
-                            }
-                        },
-                        () -> {
-                            try {
-                                this.stateShared.getBrushManager().getBrushes().add(brush);
-                            } catch (RemoteException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                );
-    }
 }

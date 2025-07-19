@@ -58,8 +58,6 @@ public class ControllerImpl implements Controller, Serializable {
 
     @Override
     public void updatePixelGrid(int x, int y) throws RemoteException {
-//        this.view.setPixelGridView(new PixelGridView(this.model.getStateShared().getPixelGrid(), new BrushDrawerImpl(this.model.getBrushManager()), 600, 600, this.view));
-        //this.model.getStateShared().updateGridCell(new GridCellUpdateMessage(x, y, this.model.getLocalBrush().getColor()));
         this.model.updatePixelGrid(x, y, this.model.getLocalBrush().getColor());
         this.view.refresh();
     }

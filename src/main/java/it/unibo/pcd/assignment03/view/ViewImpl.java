@@ -11,12 +11,10 @@ public class ViewImpl implements View {
     private PixelGridView pixelGridView;
 
     @Override
-    public void init(Controller controller) throws RemoteException {
+    public void init(Controller controller) {
         this.controller = controller;
         this.sessionView = new SessionView(this.controller);
-        // new BrushDrawerImpl(this.controller.getModel().getBrushManager())
         this.pixelGridView = new PixelGridView(this, 600, 600);
-//        this.pixelGridView = new PixelGridView(this.controller.getModel().getStateShared().getPixelGrid(), new BrushDrawerImpl(this.controller.getModel().getBrushManager()), 600, 600, this);
     }
 
     @Override
@@ -26,7 +24,6 @@ public class ViewImpl implements View {
 
     @Override
     public void setPixelGridView(PixelGridView pixelGridView) {
-        System.out.println("setPixelGridView " + pixelGridView);
         this.pixelGridView = pixelGridView;
     }
 
@@ -49,15 +46,12 @@ public class ViewImpl implements View {
 
     @Override
     public void refresh() {
-//        System.out.println(pixelGridView);
         this.pixelGridView.refresh();
     }
 
     @Override
     public void changeFrame() {
         this.sessionView.setVisible(false);
-
-        System.out.println("changeFrame " + pixelGridView);
         this.pixelGridView.setVisible(true);
         this.pixelGridView.display();
     }
