@@ -9,6 +9,8 @@ public interface View {
 
     Controller getController();
 
+    void setPixelGridView(PixelGridView pixelGridView);
+
     void display();
 
     void refresh();

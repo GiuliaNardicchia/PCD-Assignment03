@@ -13,7 +13,7 @@ public class BrushDrawerImpl implements BrushDrawer {
     private static final int STROKE_SIZE = 2;
     private final BrushManager brushManager;
 
-    BrushDrawerImpl(BrushManager brushManager) {
+    public BrushDrawerImpl(BrushManager brushManager) {
         this.brushManager = brushManager;
     }
 

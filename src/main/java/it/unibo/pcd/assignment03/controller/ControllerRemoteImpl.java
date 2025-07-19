@@ -11,10 +11,25 @@ import java.util.List;
 public class ControllerRemoteImpl implements ControllerRemote, Serializable {
 
     private final List<ControllerRemote> controllersRemote = new ArrayList<>();
+    private int x;
 
     @Override
     public void addPeer(ControllerRemote peer) throws RemoteException {
         this.controllersRemote.add(peer);
+    }
+
+    @Override
+    public List<ControllerRemote> getPeers() throws RemoteException {
+        return new ArrayList<>(this.controllersRemote);
+    }
+
+    @Override
+    public void printHello() throws RemoteException {
+        System.out.println(updateHelloMessage());
+    }
+
+    private int updateHelloMessage() {
+        return this.x = this.x + 1;
     }
 //
 //    @Override

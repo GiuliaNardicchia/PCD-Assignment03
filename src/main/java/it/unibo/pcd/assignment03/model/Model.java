@@ -14,19 +14,23 @@ public interface Model {
 
     BrushManager getBrushManager() throws RemoteException;
 
-    PixelGrid getGrid() throws RemoteException;
+//    PixelGrid getGrid() throws RemoteException;
+
+    ModelStateShared getStateShared();
 
     void updateLocalBrush(int x, int y) throws RemoteException;
 
-    void updatePixelGrid(int x, int y,  int color) throws RemoteException;
+//    void updatePixelGrid(int x, int y,  int color) throws RemoteException;
 
     void updateLocalBrushColor(int color) throws RemoteException;
 
-    void setGrid(PixelGrid grid) throws RemoteException;
-
-    void updateGridFromSource(PixelGrid sourceGrid) throws RemoteException;
+//    void setGrid(PixelGrid grid) throws RemoteException;
+//
+//    void updateGridFromSource(PixelGrid sourceGrid) throws RemoteException;
 
     void setBrushes(Set<Brush> brushes) throws RemoteException;
+
+    void setStateShared(ModelStateShared stateShared);
 
     void updateBrushes(Brush brush) throws RemoteException;
 }

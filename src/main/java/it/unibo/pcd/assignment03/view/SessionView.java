@@ -8,9 +8,9 @@ import java.awt.*;
 
 public class SessionView extends JFrame {
 
-    private final JTextField sessionIdField = new JTextField(20);
+    private final JTextField sessionIdField = new JTextField("session1", 20);
     private final JTextField hostField = new JTextField("localhost", 20);
-    private final JTextField portField = new JTextField("8080", 20);
+    private final JTextField portField = new JTextField("1099", 20);
 
     public SessionView(Controller controller) {
         setTitle("Session View");

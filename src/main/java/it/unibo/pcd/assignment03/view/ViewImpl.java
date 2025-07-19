@@ -1,8 +1,8 @@
 package it.unibo.pcd.assignment03.view;
 
 import it.unibo.pcd.assignment03.controller.Controller;
+import it.unibo.pcd.assignment03.model.PixelGridImpl;
 
-import java.io.Serializable;
 import java.rmi.RemoteException;
 
 public class ViewImpl implements View {
@@ -15,12 +15,18 @@ public class ViewImpl implements View {
     public void init(Controller controller) throws RemoteException {
         this.controller = controller;
         this.sessionView = new SessionView(this.controller);
-        this.pixelGridView = new PixelGridView(this.controller.getModel().getGrid(), new BrushDrawerImpl(this.controller.getModel().getBrushManager()), 600, 600, this);
+        this.pixelGridView = new PixelGridView(new PixelGridImpl(40,40), new BrushDrawerImpl(this.controller.getModel().getBrushManager()), 600, 600, this);
+//        this.pixelGridView = new PixelGridView(this.controller.getModel().getStateShared().getPixelGrid(), new BrushDrawerImpl(this.controller.getModel().getBrushManager()), 600, 600, this);
     }
 
     @Override
     public Controller getController() {
         return this.controller;
+    }
+
+    @Override
+    public void setPixelGridView(PixelGridView pixelGridView) {
+        this.pixelGridView = pixelGridView;
     }
 
     @Override
