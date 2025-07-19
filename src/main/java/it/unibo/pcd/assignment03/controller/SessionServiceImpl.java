@@ -2,6 +2,7 @@ package it.unibo.pcd.assignment03.controller;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,6 +22,6 @@ public class SessionServiceImpl implements SessionService, Serializable {
 
     @Override
     public Map<String, PeerInfo> getPeerRegistryService() throws RemoteException {
-        return new ConcurrentHashMap<>(this.peerRegistryService);
+        return new HashMap<>(this.peerRegistryService);
     }
 }

@@ -1,12 +1,9 @@
 package it.unibo.pcd.assignment03.model;
 
 import it.unibo.pcd.assignment03.controller.GridCellUpdateMessage;
-import it.unibo.pcd.assignment03.controller.PeerInfo;
 
 import java.rmi.RemoteException;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ModelStateSharedImpl implements ModelStateShared {
 
@@ -45,8 +42,8 @@ public class ModelStateSharedImpl implements ModelStateShared {
     }
 
     @Override
-    public void updateBrushPosition(Brush localBrush, int x, int y) throws RemoteException {
-        this.brushManager.updateBrushPosition(localBrush, x, y);
+    public void updateBrush(Brush localBrush, int x, int y, int color) throws RemoteException {
+        this.brushManager.updateBrush(localBrush, x, y, color);
     }
 
 }

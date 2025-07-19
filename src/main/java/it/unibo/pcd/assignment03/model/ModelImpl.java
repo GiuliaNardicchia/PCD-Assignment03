@@ -4,8 +4,6 @@ import it.unibo.pcd.assignment03.controller.Controller;
 import it.unibo.pcd.assignment03.controller.GridCellUpdateMessage;
 
 import java.rmi.RemoteException;
-import java.util.Objects;
-import java.util.Set;
 
 import static it.unibo.pcd.assignment03.utils.Utils.randomColor;
 
@@ -59,7 +57,7 @@ public class ModelImpl implements Model {
 
     @Override
     public void updateLocalBrush(int x, int y) throws RemoteException {
-        this.stateShared.updateBrushPosition(this.localBrush, x, y);
+        this.stateShared.updateBrush(this.localBrush, x, y, this.localBrush.getColor());
     }
 
     @Override
@@ -70,6 +68,7 @@ public class ModelImpl implements Model {
     @Override
     public void updateLocalBrushColor(int color) throws RemoteException {
         this.localBrush.setColor(color);
+        this.stateShared.updateBrush(this.localBrush, this.localBrush.getX(), this.localBrush.getY(), color);
     }
 
     @Override
