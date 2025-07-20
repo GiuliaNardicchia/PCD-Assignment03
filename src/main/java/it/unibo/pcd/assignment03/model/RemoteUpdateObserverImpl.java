@@ -14,8 +14,7 @@ public class RemoteUpdateObserverImpl extends UnicastRemoteObject implements Rem
     }
 
     @Override
-    public void update(String message) throws RemoteException {
-        System.out.println("Remote update received: " + message);
+    public void notifyUpdate() throws RemoteException {
         localView.refresh();
     }
 }

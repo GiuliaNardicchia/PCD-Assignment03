@@ -3,7 +3,6 @@ package it.unibo.pcd.assignment03.model;
 import it.unibo.pcd.assignment03.controller.GridCellUpdateMessage;
 
 import java.rmi.RemoteException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -25,7 +24,7 @@ public class ModelStateSharedImpl implements ModelStateShared {
         System.out.println("Updated cell at (" + gridCellUpdate.getX() + ", " + gridCellUpdate.getY() + ") to color " + gridCellUpdate.getColor());
         // Notify observers about the grid cell update
         for (RemoteUpdateObserver observer : observers) {
-            observer.update("Cell updated at (" + gridCellUpdate.getX() + ", " + gridCellUpdate.getY() + ") to color " + gridCellUpdate.getColor());
+            observer.notifyUpdate();
         }
     }
 
@@ -44,7 +43,7 @@ public class ModelStateSharedImpl implements ModelStateShared {
         this.brushManager.addBrush(localBrush);
         // Notify observers about the new brush
         for (RemoteUpdateObserver observer : observers) {
-            observer.update("New brush added: " + localBrush);
+            observer.notifyUpdate();
         }
     }
 
@@ -58,7 +57,7 @@ public class ModelStateSharedImpl implements ModelStateShared {
         this.brushManager.updateBrush(localBrush, x, y, color);
         // Notify observers about the brush update
         for (RemoteUpdateObserver observer : observers) {
-            observer.update("Brush updated at (" + x + ", " + y + ") to color " + color);
+            observer.notifyUpdate();
         }
     }
 
