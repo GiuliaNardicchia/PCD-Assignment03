@@ -1,7 +1,6 @@
 package it.unibo.pcd.assignment03.model;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 public class PixelGridImpl implements PixelGrid, Serializable {
     private final int nRows;

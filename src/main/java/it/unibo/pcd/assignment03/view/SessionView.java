@@ -15,7 +15,7 @@ public class SessionView extends JFrame {
     public SessionView(Controller controller) {
         setTitle("Session View");
         setSize(450, 300);
-        setLocationRelativeTo(null); // Center window
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
@@ -61,7 +61,8 @@ public class SessionView extends JFrame {
             action.perform(sessionId, host, Integer.parseInt(port));
             JOptionPane.showMessageDialog(this, "Successfully " + actionName + " session: " + sessionId);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Failed to " + actionName + " session: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Failed to " + actionName + " session: " + ex.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 

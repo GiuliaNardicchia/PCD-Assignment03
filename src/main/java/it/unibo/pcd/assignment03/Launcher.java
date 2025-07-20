@@ -12,9 +12,8 @@ import java.io.IOException;
 public class Launcher {
     private final static int NUM_ROWS = 40;
     private final static int NUM_COLS = 40;
-    public static void main(String[] args) throws IOException {
 
-        String host = (args.length < 1) ? "localhost" : args[0];
+    public static void main(String[] args) throws IOException {
 
         Controller controller = new ControllerImpl();
         Model model = new ModelImpl(NUM_ROWS, NUM_COLS);

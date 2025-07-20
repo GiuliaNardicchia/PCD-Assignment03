@@ -1,8 +1,6 @@
 package it.unibo.pcd.assignment03.controller;
 
-import it.unibo.pcd.assignment03.model.BrushManager;
 import it.unibo.pcd.assignment03.model.Model;
-import it.unibo.pcd.assignment03.model.PixelGrid;
 import it.unibo.pcd.assignment03.view.View;
 
 import java.io.IOException;
@@ -25,7 +23,7 @@ public interface Controller extends Remote {
 
     void start() throws IOException;
 
-    void sendGoodbyeMessage() throws IOException;
+    void leaveSession() throws IOException;
 
     void createSession(String sessionId, String host, int port) throws RemoteException;
 

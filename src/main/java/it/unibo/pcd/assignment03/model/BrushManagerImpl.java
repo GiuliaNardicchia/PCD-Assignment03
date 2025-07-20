@@ -20,7 +20,6 @@ public class BrushManagerImpl implements BrushManager, Serializable {
     @Override
     public synchronized void removeBrush(Brush brush) throws RemoteException {
         this.brushes.removeIf(other -> {
-            // TODO
             try {
                 return Objects.equals(other.getId(), brush.getId());
             } catch (RemoteException e) {
@@ -53,7 +52,6 @@ public class BrushManagerImpl implements BrushManager, Serializable {
                             } catch (RemoteException ignored) {
                             }
                         },
-                        () -> System.out.println("Brush not found: " + localBrush)
-                );
+                        () -> System.out.println("Brush not found: " + localBrush));
     }
 }

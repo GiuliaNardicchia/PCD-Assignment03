@@ -1,9 +1,6 @@
 package it.unibo.pcd.assignment03.view;
 
 import it.unibo.pcd.assignment03.controller.Controller;
-import it.unibo.pcd.assignment03.model.PixelGridImpl;
-
-import java.rmi.RemoteException;
 
 public class ViewImpl implements View {
     private Controller controller;

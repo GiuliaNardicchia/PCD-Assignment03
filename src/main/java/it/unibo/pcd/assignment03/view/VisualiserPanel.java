@@ -1,11 +1,9 @@
 package it.unibo.pcd.assignment03.view;
 
 import it.unibo.pcd.assignment03.model.PixelGrid;
-import it.unibo.pcd.assignment03.model.PixelGridImpl;
 
 import javax.swing.*;
 import java.awt.*;
-import java.rmi.RemoteException;
 
 public class VisualiserPanel extends JPanel {
     private static final int STROKE_SIZE = 1;
@@ -32,7 +30,7 @@ public class VisualiserPanel extends JPanel {
                 RenderingHints.VALUE_RENDER_QUALITY);
         g2.clearRect(0, 0, this.getWidth(), this.getHeight());
 
-        try{
+        try {
             PixelGrid grid = view.getController().getModel().getGrid();
             int numRows = grid.getNumRows();
             int numCols = grid.getNumColumns();

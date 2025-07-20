@@ -62,7 +62,8 @@ public class BrushImpl implements Brush, Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
         BrushImpl brush = (BrushImpl) o;
         return id == brush.id;
     }

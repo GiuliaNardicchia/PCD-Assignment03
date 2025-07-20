@@ -1,21 +1,14 @@
 package it.unibo.pcd.assignment03.controller;
 
 import it.unibo.pcd.assignment03.model.*;
-import it.unibo.pcd.assignment03.view.BrushDrawerImpl;
-import it.unibo.pcd.assignment03.view.PixelGridView;
 import it.unibo.pcd.assignment03.view.View;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class ControllerImpl implements Controller, Serializable {
 
@@ -66,7 +59,7 @@ public class ControllerImpl implements Controller, Serializable {
     }
 
     @Override
-    public void sendGoodbyeMessage() {
+    public void leaveSession() {
         try {
             this.model.leaveSession();
             this.model.getStateShared().removeListeners(this.remoteUpdateObserver);
@@ -76,8 +69,10 @@ public class ControllerImpl implements Controller, Serializable {
 
     @Override
     public void createSession(String sessionId, String host, int port) throws RemoteException {
-        ModelStateShared modelStateShared = new ModelStateSharedImpl(new PixelGridImpl(this.model.getNumRows(), this.model.getNumCols()), new BrushManagerImpl());
-        ModelStateShared modelStateSharedStub = (ModelStateShared) UnicastRemoteObject.exportObject(modelStateShared, 0);
+        ModelStateShared modelStateShared = new ModelStateSharedImpl(
+                new PixelGridImpl(this.model.getNumRows(), this.model.getNumCols()), new BrushManagerImpl());
+        ModelStateShared modelStateSharedStub = (ModelStateShared) UnicastRemoteObject.exportObject(modelStateShared,
+                0);
         Registry registry = LocateRegistry.createRegistry(port);
         registry.rebind(MODEL_BINDING_NAME, modelStateSharedStub);
         this.model.setStateShared(modelStateShared);

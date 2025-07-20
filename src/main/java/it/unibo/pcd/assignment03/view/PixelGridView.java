@@ -1,8 +1,5 @@
 package it.unibo.pcd.assignment03.view;
 
-import it.unibo.pcd.assignment03.model.PixelGrid;
-import it.unibo.pcd.assignment03.model.PixelGridImpl;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -34,21 +31,7 @@ public class PixelGridView extends JFrame {
         panel = new VisualiserPanel(this.view, w, h);
         panel.addMouseListener(createMouseListener());
         panel.addMouseMotionListener(createMotionListener());
-        var colorChangeButton = new JButton("Change color");
-        colorChangeButton.addActionListener(
-                e -> {
-                    var color = JColorChooser.showDialog(this, "Choose a color", Color.BLACK);
-                    if (color != null) {
-                        // TODO
-                        colorChangeListeners.forEach(l -> {
-                            try {
-                                l.colorChanged(color.getRGB());
-                            } catch (RemoteException ex) {
-                                throw new RuntimeException(ex);
-                            }
-                        });
-                    }
-                });
+        JButton colorChangeButton = getChangeColorButton();
         add(panel, BorderLayout.CENTER);
         add(colorChangeButton, BorderLayout.SOUTH);
         getContentPane().add(panel);
@@ -58,14 +41,31 @@ public class PixelGridView extends JFrame {
             public void windowClosing(WindowEvent e) {
                 System.out.println("shutting down");
                 try {
-                    view.getController().sendGoodbyeMessage();
+                    view.getController().leaveSession();
                 } catch (IOException ignored) {
                 }
-                dispose(); // release resources
+                dispose();
                 System.exit(0);
             }
         });
         hideCursor();
+    }
+
+    private JButton getChangeColorButton() {
+        var colorChangeButton = new JButton("Change color");
+        colorChangeButton.addActionListener(
+                e -> {
+                    var color = JColorChooser.showDialog(this, "Choose a color", Color.BLACK);
+                    if (color != null) {
+                        colorChangeListeners.forEach(l -> {
+                            try {
+                                l.colorChanged(color.getRGB());
+                            } catch (RemoteException ignored) {
+                            }
+                        });
+                    }
+                });
+        return colorChangeButton;
     }
 
     public void refresh() {
@@ -94,9 +94,8 @@ public class PixelGridView extends JFrame {
 
     private void hideCursor() {
         var cursorImage = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-        var blankCursor =
-                Toolkit.getDefaultToolkit()
-                        .createCustomCursor(cursorImage, new Point(0, 0), "blank cursor");
+        var blankCursor = Toolkit.getDefaultToolkit()
+                .createCustomCursor(cursorImage, new Point(0, 0), "blank cursor");
         this.getContentPane().setCursor(blankCursor);
     }
 
@@ -146,7 +145,6 @@ public class PixelGridView extends JFrame {
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                // TODO
                 movedListener.forEach(l -> {
                     try {
                         l.mouseMoved(e.getX(), e.getY());
