@@ -25,7 +25,7 @@ public class BrushImpl implements Brush, Serializable {
     }
 
     @Override
-    public void updatePosition(int x, int y) {
+    public synchronized void updatePosition(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -46,7 +46,7 @@ public class BrushImpl implements Brush, Serializable {
     }
 
     @Override
-    public void setColor(int color) {
+    public synchronized void setColor(int color) {
         this.color = color;
     }
 

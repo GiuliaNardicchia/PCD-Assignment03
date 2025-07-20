@@ -28,12 +28,12 @@ public class ModelStateSharedImpl implements ModelStateShared {
     }
 
     @Override
-    public synchronized PixelGrid getPixelGrid() throws RemoteException {
+    public PixelGrid getPixelGrid() throws RemoteException {
         return this.grid;
     }
 
     @Override
-    public synchronized BrushManager getBrushManager() throws RemoteException {
+    public BrushManager getBrushManager() throws RemoteException {
         return this.brushManager;
     }
 
@@ -47,7 +47,7 @@ public class ModelStateSharedImpl implements ModelStateShared {
     }
 
     @Override
-    public synchronized Set<Brush> getBrushes() throws RemoteException {
+    public Set<Brush> getBrushes() throws RemoteException {
         return this.brushManager.getBrushes();
     }
 

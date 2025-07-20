@@ -34,7 +34,7 @@ public class BrushManagerImpl implements BrushManager, Serializable {
     }
 
     @Override
-    public void updateBrush(Brush localBrush, int x, int y, int color) throws RemoteException {
+    public synchronized void updateBrush(Brush localBrush, int x, int y, int color) throws RemoteException {
         this.brushes.stream()
                 .filter(b -> {
                     try {
