@@ -19,4 +19,8 @@ public interface ModelStateShared extends Remote {
     Set<Brush> getBrushes() throws RemoteException;
 
     void updateBrush(Brush localBrush, int x, int y, int color) throws RemoteException;
+
+    void addListeners(RemoteUpdateObserver remoteUpdateObserver) throws RemoteException;
+
+    void removeListeners(RemoteUpdateObserver remoteUpdateObserver) throws RemoteException;
 }

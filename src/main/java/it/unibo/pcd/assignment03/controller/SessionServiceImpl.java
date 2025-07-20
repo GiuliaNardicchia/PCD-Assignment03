@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionServiceImpl implements SessionService, Serializable {
 
-    Map<String, PeerInfo> peerRegistryService = new ConcurrentHashMap<String, PeerInfo>();
+    Map<String, PeerInfo> peerRegistryService = new ConcurrentHashMap<>();
 
     @Override
     public void addPeer(String id, PeerInfo peerInfo) throws RemoteException {
