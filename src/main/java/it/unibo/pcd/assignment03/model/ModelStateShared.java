@@ -23,4 +23,6 @@ public interface ModelStateShared extends Remote {
     void addListeners(RemoteUpdateObserver remoteUpdateObserver) throws RemoteException;
 
     void removeListeners(RemoteUpdateObserver remoteUpdateObserver) throws RemoteException;
+
+    void removeBrush(Brush localBrush) throws RemoteException;
 }

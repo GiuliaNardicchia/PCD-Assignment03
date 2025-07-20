@@ -25,6 +25,7 @@ public class PixelGridView extends JFrame {
         this.view = view;
         this.w = w;
         this.h = h;
+        this.setSize(w, h);
         pixelListeners = new ArrayList<>();
         movedListener = new ArrayList<>();
         colorChangeListeners = new ArrayList<>();

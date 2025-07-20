@@ -27,4 +27,6 @@ public interface Model {
     void updateLocalBrushColor(int color) throws RemoteException;
 
     void setStateShared(ModelStateShared stateShared) throws RemoteException;
+
+    void leaveSession() throws RemoteException;
 }

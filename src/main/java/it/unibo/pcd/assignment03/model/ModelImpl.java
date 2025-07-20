@@ -72,11 +72,17 @@ public class ModelImpl implements Model {
     }
 
     @Override
-    public synchronized void setStateShared(ModelStateShared stateShared) throws RemoteException {
+    public void setStateShared(ModelStateShared stateShared) throws RemoteException {
         this.stateShared = stateShared;
         System.out.println("Setting local brush in state shared: " + this.localBrush);
         this.stateShared.addBrush(this.localBrush);
         this.stateShared.getBrushes().forEach(b -> System.out.println("Brush in state shared: " + b));
+    }
+
+    @Override
+    public void leaveSession() throws RemoteException {
+        this.stateShared.removeBrush(this.localBrush);
+
     }
 
 }

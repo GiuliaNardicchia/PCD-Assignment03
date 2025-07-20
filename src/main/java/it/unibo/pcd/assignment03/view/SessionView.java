@@ -71,7 +71,10 @@ public class SessionView extends JFrame {
     }
 
     public void display() {
-        SwingUtilities.invokeLater(() -> this.setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            this.pack();
+            this.setVisible(true);
+        });
     }
 
     public void close() {

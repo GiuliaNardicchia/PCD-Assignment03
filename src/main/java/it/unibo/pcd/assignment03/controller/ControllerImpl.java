@@ -76,7 +76,11 @@ public class ControllerImpl implements Controller, Serializable {
 
     @Override
     public void sendGoodbyeMessage() {
-//        String message = gson.toJson(this.model.getLocalBrush());
+        try {
+            this.model.leaveSession();
+            this.model.getStateShared().removeListeners(this.remoteUpdateObserver);
+        } catch (RemoteException ignored) {
+        }
     }
 
     @Override

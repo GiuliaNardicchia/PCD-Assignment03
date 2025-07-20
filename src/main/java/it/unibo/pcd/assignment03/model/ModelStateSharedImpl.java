@@ -71,4 +71,14 @@ public class ModelStateSharedImpl implements ModelStateShared {
         this.observers.remove(remoteUpdateObserver);
     }
 
+    @Override
+    public synchronized void removeBrush(Brush localBrush) throws RemoteException {
+        this.brushManager.removeBrush(localBrush);
+        // Notify observers about the brush removal
+        for (RemoteUpdateObserver observer : observers) {
+            observer.notifyUpdate();
+        }
+
+    }
+
 }
