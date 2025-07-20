@@ -35,7 +35,7 @@ public class PixelGridView extends JFrame {
         add(panel, BorderLayout.CENTER);
         add(colorChangeButton, BorderLayout.SOUTH);
         getContentPane().add(panel);
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -45,7 +45,6 @@ public class PixelGridView extends JFrame {
                 } catch (IOException ignored) {
                 }
                 dispose();
-                System.exit(0);
             }
         });
         hideCursor();

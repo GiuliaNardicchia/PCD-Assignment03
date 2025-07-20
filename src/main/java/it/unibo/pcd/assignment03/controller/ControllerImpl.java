@@ -73,7 +73,7 @@ public class ControllerImpl implements Controller, Serializable {
                 new PixelGridImpl(this.model.getNumRows(), this.model.getNumCols()), new BrushManagerImpl());
         ModelStateShared modelStateSharedStub = (ModelStateShared) UnicastRemoteObject.exportObject(modelStateShared,
                 0);
-        Registry registry = LocateRegistry.createRegistry(port);
+        Registry registry = LocateRegistry.getRegistry(host, port);
         registry.rebind(MODEL_BINDING_NAME, modelStateSharedStub);
         this.model.setStateShared(modelStateShared);
         this.model.getStateShared().addListeners(this.remoteUpdateObserver);
