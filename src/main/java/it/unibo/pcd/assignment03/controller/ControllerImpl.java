@@ -74,7 +74,7 @@ public class ControllerImpl implements Controller, Serializable {
         ModelStateShared modelStateSharedStub = (ModelStateShared) UnicastRemoteObject.exportObject(modelStateShared,
                 0);
         Registry registry = LocateRegistry.getRegistry(host, port);
-        registry.rebind(MODEL_BINDING_NAME, modelStateSharedStub);
+        registry.rebind(MODEL_BINDING_NAME + sessionId, modelStateSharedStub);
         this.model.setStateShared(modelStateShared);
         this.model.getStateShared().addListeners(this.remoteUpdateObserver);
         this.view.changeFrame();
@@ -84,7 +84,7 @@ public class ControllerImpl implements Controller, Serializable {
     public void joinSession(String sessionId, String host, int port) throws RemoteException {
         try {
             Registry registry = LocateRegistry.getRegistry(host, port);
-            ModelStateShared modelStateShared = (ModelStateShared) registry.lookup(MODEL_BINDING_NAME);
+            ModelStateShared modelStateShared = (ModelStateShared) registry.lookup(MODEL_BINDING_NAME + sessionId);
             this.model.setStateShared(modelStateShared);
             this.model.getStateShared().addListeners(this.remoteUpdateObserver);
             System.out.println("Joined session with model state shared.");
