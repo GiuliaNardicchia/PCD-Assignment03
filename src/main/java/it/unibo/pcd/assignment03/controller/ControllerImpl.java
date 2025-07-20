@@ -19,27 +19,18 @@ import java.util.Map;
 
 public class ControllerImpl implements Controller, Serializable {
 
-    public static final String REGISTRY_BINDING_NAME = "peerRegistry";
-    private static final String CONTROLLER_BINDING_NAME = "controller";
     private static final String MODEL_BINDING_NAME = "modelStateShared";
     private Model model;
     private View view;
-    private final String host;
-    ControllerRemote controllerRemote;
     private RemoteUpdateObserver remoteUpdateObserver;
 
-    private boolean receivedGrid = false;
-    private boolean receivedBrushes = false;
-
-    public ControllerImpl(String host) throws RemoteException {
-        this.host = host;
+    public ControllerImpl() throws RemoteException {
     }
 
     @Override
     public void init(View view, Model model) throws RemoteException {
         this.view = view;
         this.model = model;
-        this.controllerRemote = new ControllerRemoteImpl();
         this.remoteUpdateObserver = new RemoteUpdateObserverImpl(view);
     }
 
@@ -85,26 +76,13 @@ public class ControllerImpl implements Controller, Serializable {
 
     @Override
     public void createSession(String sessionId, String host, int port) throws RemoteException {
-        SessionService service = new SessionServiceImpl();
-        service.addPeer(sessionId, new PeerInfo(host, port));
-//        SessionService sessionServiceStub = (SessionService) UnicastRemoteObject.exportObject(service, 0);
-//        ControllerRemote controllerRemoteStub = (ControllerRemote) UnicastRemoteObject.exportObject(this.controllerRemote, 0);
         ModelStateShared modelStateShared = new ModelStateSharedImpl(new PixelGridImpl(this.model.getNumRows(), this.model.getNumCols()), new BrushManagerImpl());
         ModelStateShared modelStateSharedStub = (ModelStateShared) UnicastRemoteObject.exportObject(modelStateShared, 0);
         Registry registry = LocateRegistry.createRegistry(port);
         registry.rebind(MODEL_BINDING_NAME, modelStateSharedStub);
-//        registry.rebind(REGISTRY_BINDING_NAME, sessionServiceStub);
-//        registry.rebind(CONTROLLER_BINDING_NAME, controllerRemoteStub);
         this.model.setStateShared(modelStateShared);
         this.model.getStateShared().addListeners(this.remoteUpdateObserver);
         this.view.changeFrame();
-
-//        this.view.setPixelGridView(new PixelGridView(new BrushDrawerImpl(this.model.getBrushManager()), 600, 600, this.view));
-
-
-//        this.model.getStateShared().printCounter();
-//        this.model.getStateShared().setCounter(1, new SerializableConsumer<>());
-//        this.model.getStateShared().printCounter();
     }
 
     @Override
@@ -112,81 +90,13 @@ public class ControllerImpl implements Controller, Serializable {
         try {
             Registry registry = LocateRegistry.getRegistry(host, port);
             ModelStateShared modelStateShared = (ModelStateShared) registry.lookup(MODEL_BINDING_NAME);
-//            SessionService sessionService = (SessionService) registry.lookup(REGISTRY_BINDING_NAME);
             this.model.setStateShared(modelStateShared);
             this.model.getStateShared().addListeners(this.remoteUpdateObserver);
             System.out.println("Joined session with model state shared.");
             this.view.changeFrame();
-//            Map<String, PeerInfo> peers = sessionService.getPeerRegistryService();
-//            for (Map.Entry<String, PeerInfo> entry : peers.entrySet()) {
-//                PeerInfo peerInfo = entry.getValue();
-//                try {
-//                    Registry peerRegistry = LocateRegistry.getRegistry(peerInfo.getHost(), peerInfo.getPort());
-//                    ControllerRemote peer = (ControllerRemote) peerRegistry.lookup(CONTROLLER_BINDING_NAME);
-//                    this.controllerRemote.addPeer(peer);
-//                    peer.addPeer(this.controllerRemote);
-//                    peer.printHello();
-//                    System.out.println("Connesso a peer " + entry.getKey() + " su " + peerInfo.getHost() + ":" + peerInfo.getPort());
-//                } catch (Exception e) {
-//                    System.out.println("Errore nel connettersi a peer " + entry.getKey());
-//                    e.printStackTrace();
-//                }
-//            }
         } catch (RemoteException | NotBoundException e) {
-            e.printStackTrace();
+            System.err.println("Error joining session: " + e.getMessage());
+            System.exit(1);
         }
     }
-
-
-//    @Override
-//    public void createSession(String sessionId, String host, int port) throws RemoteException {
-//        this.view.changeFrame();
-//
-//        SessionService service = new SessionServiceImpl();
-//        service.addPeer(sessionId, new PeerInfo(host, port));
-//        SessionService sessionServiceStub = (SessionService) UnicastRemoteObject.exportObject(service, 0);
-//        ControllerRemote controllerRemoteStub = (ControllerRemote) UnicastRemoteObject.exportObject(this.controllerRemote, 0);
-//        // Avvia un registry RMI (porta 1099)
-////        Registry registry = LocateRegistry.getRegistry();
-//        Registry registry = LocateRegistry.createRegistry(port);
-//        registry.rebind(REGISTRY_BINDING_NAME, sessionServiceStub);
-//        registry.rebind(CONTROLLER_BINDING_NAME, controllerRemoteStub);
-//
-//        Map<String, PeerInfo> peers = sessionServiceStub.getPeerRegistryService();
-//        for (Map.Entry<String, PeerInfo> entry : peers.entrySet()) {
-//            String peerId = entry.getKey();
-//            PeerInfo peerInfo = entry.getValue();
-//            System.out.println("Peer ID: " + peerId + ", Host: " + peerInfo.getHost() + ", Port: " + peerInfo.getPort());
-//        }
-//        System.out.println("Peer registry ready.");
-//    }
-//
-//    @Override
-//    public void joinSession(String sessionId, String host, int port) {
-//        this.view.changeFrame();
-//
-//        try {
-//            Registry registry = LocateRegistry.getRegistry(host);
-////            ControllerRemote controllerRemoteStub = (ControllerRemote) UnicastRemoteObject.exportObject(this.controllerRemote, 0);
-////            registry.rebind(CONTROLLER_BINDING_NAME, controllerRemoteStub);
-//            SessionService sessionService = (SessionService) registry.lookup(REGISTRY_BINDING_NAME);
-//            Map<String, PeerInfo> peers = sessionService.getPeerRegistryService();
-//            for (Map.Entry<String, PeerInfo> entry : peers.entrySet()) {
-//                PeerInfo peerInfo = entry.getValue();
-//                try {
-//                    Registry peerRegistry = LocateRegistry.getRegistry(peerInfo.getHost(), peerInfo.getPort());
-//                    ControllerRemote peer = (ControllerRemote) peerRegistry.lookup(CONTROLLER_BINDING_NAME);
-//                    this.controllerRemote.addPeer(peer);
-//                    peer.addPeer(this.controllerRemote);
-//                    peer.printHello();
-//                    System.out.println("Connesso a peer " + entry.getKey() + " su " + peerInfo.getHost() + ":" + peerInfo.getPort());
-//                } catch (Exception e) {
-//                    System.out.println("Errore nel connettersi a peer " + entry.getKey());
-//                    e.printStackTrace();
-//                }
-//            }
-//        } catch (RemoteException | NotBoundException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

@@ -35,19 +35,14 @@ public class BrushManagerImpl implements BrushManager, Serializable {
     }
 
     @Override
-    public synchronized void setBrushes(Set<Brush> brushes) throws RemoteException {
-        this.brushes = brushes;
-    }
-
-    @Override
     public void updateBrush(Brush localBrush, int x, int y, int color) throws RemoteException {
         this.brushes.stream()
                 .filter(b -> {
                     try {
                         return Objects.equals(b.getId(), localBrush.getId());
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
+                    } catch (RemoteException ignored) {
                     }
+                    return false;
                 })
                 .findFirst()
                 .ifPresentOrElse(
@@ -55,8 +50,7 @@ public class BrushManagerImpl implements BrushManager, Serializable {
                             try {
                                 b.updatePosition(x, y);
                                 b.setColor(color);
-                            } catch (RemoteException e) {
-                                throw new RuntimeException(e);
+                            } catch (RemoteException ignored) {
                             }
                         },
                         () -> System.out.println("Brush not found: " + localBrush)

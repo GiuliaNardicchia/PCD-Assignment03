@@ -20,8 +20,7 @@ public class ModelStateSharedImpl implements ModelStateShared {
 
     @Override
     public synchronized void setGridCell(GridCellUpdateMessage gridCellUpdate) throws RemoteException {
-        this.grid.set(gridCellUpdate.getX(), gridCellUpdate.getY(), gridCellUpdate.getColor());
-        System.out.println("Updated cell at (" + gridCellUpdate.getX() + ", " + gridCellUpdate.getY() + ") to color " + gridCellUpdate.getColor());
+        this.grid.set(gridCellUpdate.x(), gridCellUpdate.y(), gridCellUpdate.color());
         // Notify observers about the grid cell update
         for (RemoteUpdateObserver observer : observers) {
             observer.notifyUpdate();

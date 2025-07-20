@@ -1,6 +1,5 @@
 package it.unibo.pcd.assignment03.model;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Random;

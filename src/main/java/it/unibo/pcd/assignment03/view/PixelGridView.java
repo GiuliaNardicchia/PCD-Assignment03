@@ -104,28 +104,20 @@ public class PixelGridView extends JFrame {
         return new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                //TODO
-                int dx = 0;
                 try {
-                    dx = w / view.getController().getModel().getGrid().getNumColumns();
-                } catch (RemoteException ex) {
-                    throw new RuntimeException(ex);
+                    int dx = w / view.getController().getModel().getGrid().getNumColumns();
+                    int dy = h / view.getController().getModel().getGrid().getNumRows();
+                    int col = e.getX() / dx;
+                    int row = e.getY() / dy;
+                    pixelListeners.forEach(l -> {
+                        try {
+                            l.selectedCell(col, row);
+                        } catch (RemoteException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    });
+                } catch (RemoteException ignored) {
                 }
-                int dy = 0;
-                try {
-                    dy = h / view.getController().getModel().getGrid().getNumRows();
-                } catch (RemoteException ex) {
-                    throw new RuntimeException(ex);
-                }
-                int col = e.getX() / dx;
-                int row = e.getY() / dy;
-                pixelListeners.forEach(l -> {
-                    try {
-                        l.selectedCell(col, row);
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                });
             }
 
             @Override
@@ -158,8 +150,7 @@ public class PixelGridView extends JFrame {
                 movedListener.forEach(l -> {
                     try {
                         l.mouseMoved(e.getX(), e.getY());
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
+                    } catch (RemoteException ignored) {
                     }
                 });
             }

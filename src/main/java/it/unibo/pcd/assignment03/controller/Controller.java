@@ -23,7 +23,7 @@ public interface Controller extends Remote {
 
     void updateLocalBrushColor(int color) throws RemoteException;
 
-    void start() throws IOException, RemoteException;
+    void start() throws IOException;
 
     void sendGoodbyeMessage() throws IOException;
 
@@ -31,8 +31,4 @@ public interface Controller extends Remote {
 
     void joinSession(String sessionId, String host, int port) throws RemoteException, NotBoundException;
 
-//    void addPeer(Controller peer) throws RemoteException;
-//    void updateGridCell(GridCellUpdateMessage gridCellUpdate) throws RemoteException;
-//    void updateBrushManager(BrushManager brushManager) throws RemoteException;
-//    void updatePixelGrid(PixelGrid pixelGrid) throws RemoteException;
 }

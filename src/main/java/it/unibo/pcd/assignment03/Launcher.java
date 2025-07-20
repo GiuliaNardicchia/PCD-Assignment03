@@ -2,8 +2,6 @@ package it.unibo.pcd.assignment03;
 
 import it.unibo.pcd.assignment03.controller.Controller;
 import it.unibo.pcd.assignment03.controller.ControllerImpl;
-import it.unibo.pcd.assignment03.model.Brush;
-import it.unibo.pcd.assignment03.model.BrushImpl;
 import it.unibo.pcd.assignment03.model.Model;
 import it.unibo.pcd.assignment03.model.ModelImpl;
 import it.unibo.pcd.assignment03.view.View;
@@ -18,7 +16,7 @@ public class Launcher {
 
         String host = (args.length < 1) ? "localhost" : args[0];
 
-        Controller controller = new ControllerImpl(host);
+        Controller controller = new ControllerImpl();
         Model model = new ModelImpl(NUM_ROWS, NUM_COLS);
         View view = new ViewImpl();
 

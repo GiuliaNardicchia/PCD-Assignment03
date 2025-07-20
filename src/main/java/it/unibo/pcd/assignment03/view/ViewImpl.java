@@ -23,11 +23,6 @@ public class ViewImpl implements View {
     }
 
     @Override
-    public void setPixelGridView(PixelGridView pixelGridView) {
-        this.pixelGridView = pixelGridView;
-    }
-
-    @Override
     public void display() {
         this.sessionView.display();
 
@@ -52,6 +47,7 @@ public class ViewImpl implements View {
     @Override
     public void changeFrame() {
         this.sessionView.setVisible(false);
+        this.sessionView.close();
         this.pixelGridView.setVisible(true);
         this.pixelGridView.display();
     }

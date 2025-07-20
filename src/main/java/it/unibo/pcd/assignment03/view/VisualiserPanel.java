@@ -32,15 +32,13 @@ public class VisualiserPanel extends JPanel {
                 RenderingHints.VALUE_RENDER_QUALITY);
         g2.clearRect(0, 0, this.getWidth(), this.getHeight());
 
-        int dx = 0;
-        int dy = 0;
         try{
             PixelGrid grid = view.getController().getModel().getGrid();
             int numRows = grid.getNumRows();
             int numCols = grid.getNumColumns();
 
-            dx = w / numCols;
-            dy = h / numRows;
+            int dx = w / numCols;
+            int dy = h / numRows;
 
             g2.setStroke(new BasicStroke(STROKE_SIZE));
 
