@@ -123,7 +123,7 @@ class WalkerGUI(
         if isStopped then
           scannerRef ! DirectoryScanner.Stop
           aggregateRef ! AggregateActor.Stop
-          Thread.sleep(100) // Piccolo delay per completare la transizione a idle
+          Thread.sleep(100)
 
         scannerRef ! DirectoryScanner.Start
         aggregateRef ! AggregateActor.Start
