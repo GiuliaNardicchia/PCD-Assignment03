@@ -1,7 +1,5 @@
 package it.unibo.pcd.assignment03.model;
 
-import it.unibo.pcd.assignment03.controller.GridCellUpdateMessage;
-
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Set;

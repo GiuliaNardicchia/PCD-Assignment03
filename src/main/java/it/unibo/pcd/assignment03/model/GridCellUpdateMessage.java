@@ -1,4 +1,4 @@
-package it.unibo.pcd.assignment03.controller;
+package it.unibo.pcd.assignment03.model;
 
 import java.io.Serializable;
 
